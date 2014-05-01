@@ -1,11 +1,11 @@
 package com.nosqlrevolution.service;
 
-import com.nosqlrevolution.model.ContributionsAndPayments;
-import com.nosqlrevolution.model.Dependent;
-import com.nosqlrevolution.model.ClaimDetail;
-import com.nosqlrevolution.model.Member;
-import com.nosqlrevolution.model.Claim;
-import com.nosqlrevolution.model.Balance;
+import com.nosqlrevolution.model.data.ContributionsAndPayments;
+import com.nosqlrevolution.model.data.Dependent;
+import com.nosqlrevolution.model.data.ClaimDetail;
+import com.nosqlrevolution.model.data.Member;
+import com.nosqlrevolution.model.data.Claim;
+import com.nosqlrevolution.model.data.Balance;
 import com.nosqlrevolution.waltermitty.App;
 
 import java.sql.*;

@@ -1,5 +1,7 @@
-package com.nosqlrevolution.model;
+package com.nosqlrevolution.model.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -20,106 +22,130 @@ public class Claim {
     private BigDecimal patientResponsibilityAmount;
 
     private ArrayList<ClaimDetail> claimDetails;
-    private List<String> cptCodesAll = new ArrayList<String>();
-    private Set<String> cptCodesUnique = new HashSet<String>();
+    private List<String> cptCodesAll = new ArrayList<>();
+    private Set<String> cptCodesUnique = new HashSet<>();
 
-    
+    @JsonProperty("newClaimID")
     public int getNewClaimID() {
         return newClaimID;
     }
 
+    @JsonProperty("newClaimID")
     public void setNewClaimID(int newClaimID) {
         this.newClaimID = newClaimID;
     }
 
+    @JsonProperty("newMemberID")
     public int getNewMemberID() {
         return newMemberID;
     }
 
+    @JsonProperty("newMemberID")
     public void setNewMemberID(int newMemberID) {
         this.newMemberID = newMemberID;
     }
 
+    @JsonProperty("dependentServiced")
     public int getDependentServiced() {
         return dependentServiced;
     }
 
+    @JsonProperty("dependentServiced")
     public void setDependentServiced(int dependentServiced) {
         this.dependentServiced = dependentServiced;
     }
 
+    @JsonProperty("claimType")
     public String getClaimType() {
         return claimType;
     }
 
+    @JsonProperty("claimType")
     public void setClaimType(String claimType) {
         this.claimType = claimType;
     }
 
+    @JsonProperty("dateReceived")
     public Timestamp getDateReceived() {
         return dateReceived;
     }
 
+    @JsonProperty("dateReceived")
     public void setDateReceived(Timestamp dateReceived) {
         this.dateReceived = dateReceived;
     }
 
+    @JsonProperty("dateProcessed")
     public Timestamp getDateProcessed() {
         return dateProcessed;
     }
 
+    @JsonProperty("dateProcessed")
     public void setDateProcessed(Timestamp dateProcessed) {
         this.dateProcessed = dateProcessed;
     }
 
+    @JsonProperty("serviceStart")
     public Timestamp getServiceStart() {
         return serviceStart;
     }
 
+    @JsonProperty("serviceStart")
     public void setServiceStart(Timestamp serviceStart) {
         this.serviceStart = serviceStart;
     }
 
+    @JsonProperty("serviceEnd")
     public Timestamp getServiceEnd() {
         return serviceEnd;
     }
 
+    @JsonProperty("serviceEnd")
     public void setServiceEnd(Timestamp serviceEnd) {
         this.serviceEnd = serviceEnd;
     }
 
+    @JsonProperty("repricedAmount")
     public BigDecimal getRepricedAmount() {
         return repricedAmount;
     }
 
+    @JsonProperty("repricedAmount")
     public void setRepricedAmount(BigDecimal repricedAmount) {
         this.repricedAmount = repricedAmount;
     }
 
+    @JsonProperty("patientResponsibilityAmount")
     public BigDecimal getPatientResponsibilityAmount() {
         return patientResponsibilityAmount;
     }
 
+    @JsonProperty("patientResponsibilityAmount")
     public void setPatientResponsibilityAmount(BigDecimal patientResponsibilityAmount) {
         this.patientResponsibilityAmount = patientResponsibilityAmount;
     }
 
+    @JsonProperty("claimDetails")
     public ArrayList<ClaimDetail> getClaimDetails() {
         return claimDetails;
     }
 
+    @JsonProperty("claimDetails")
     public void setClaimDetails(ArrayList<ClaimDetail> claimDetails) {
         this.claimDetails = claimDetails;
     }
 
+    @JsonProperty("cptCodesAll")
     public List<String> getCptCodesAll() {
         return cptCodesAll;
     }
 
+    @JsonProperty("cptCodesAll")
     public void setCptCodesAll(List<String> cptCodesAll) {
         this.cptCodesAll = cptCodesAll;
     }
 
+    @JsonIgnore
     public void addCptCodesAll(List<String> cptCodesAll) {
         if (cptCodesAll == null) 
             return;
@@ -132,14 +158,17 @@ public class Claim {
         this.cptCodesAll.addAll(cptCodesAll);
     }
 
+    @JsonProperty("cptCodesUnique")
     public Set<String> getCptCodesUnique() {
         return cptCodesUnique;
     }
 
+    @JsonProperty("cptCodesUnique")
     public void setCptCodesUnique(Set<String> cptCodesUnique) {
         this.cptCodesUnique = cptCodesUnique;
     }
 
+    @JsonIgnore
     public void addCptCodesUnique(Set<String> cptCodesUnique) {
         if (cptCodesUnique == null) 
             return;

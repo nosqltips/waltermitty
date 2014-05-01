@@ -1,7 +1,7 @@
 package com.nosqlrevolution.waltermitty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nosqlrevolution.model.Member;
+import com.nosqlrevolution.model.data.Member;
 import com.nosqlrevolution.service.DataBaseService;
 import com.nosqlrevolution.service.IndexService;
 

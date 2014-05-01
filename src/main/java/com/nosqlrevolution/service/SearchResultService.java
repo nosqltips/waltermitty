@@ -2,7 +2,7 @@ package com.nosqlrevolution.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nosqlrevolution.enums.Field;
-import com.nosqlrevolution.model.Member;
+import com.nosqlrevolution.model.data.Member;
 import com.nosqlrevolution.model.Result;
 import com.nosqlrevolution.model.SimpleFacet;
 import com.nosqlrevolution.util.DateUtil;
