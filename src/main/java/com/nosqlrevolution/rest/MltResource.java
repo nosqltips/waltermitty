@@ -1,7 +1,6 @@
 package com.nosqlrevolution.rest;
 
 import com.nosqlrevolution.model.SearchQuery;
-import com.nosqlrevolution.model.SearchResult;
 import com.nosqlrevolution.service.MoreLikeThisService;
 import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
@@ -27,9 +26,10 @@ public class MltResource {
     
     @GET
     @Produces("application/json")
-    public SearchResult search(@QueryParam("docId") String docId) {
+    public SearchQuery search(@QueryParam("memberId") String memberId) {
         SearchQuery query = new SearchQuery();
-        query.setDocId(docId);
-        return mlt.search(query);    }
+        query.setMemberId(memberId);
+        return mlt.search(query);    
+    }
 }
 

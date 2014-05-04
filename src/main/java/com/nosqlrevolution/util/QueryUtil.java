@@ -11,6 +11,8 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.index.query.FilterBuilders.*;
 import static com.nosqlrevolution.model.BuilderModel.BooleanType.*;
 import static com.nosqlrevolution.model.BuilderModel.QueryType.*;
+import com.nosqlrevolution.model.FacetRequest;
+import com.nosqlrevolution.model.SelectableFacet;
 
 /**
  *
@@ -148,103 +150,22 @@ public class QueryUtil {
     }
     
     /**
-     * Split on whitespace, and add all names to builder
+     * Get the user selections for each FacetField and add to the builder
+     * 
      * @param builders
-     * @param terms
-     * @param field 
+     * @param previousRequest
+     * @return 
      */
-    public static void addAllTerms(List<BuilderModel> builders, String terms, String field) {
-        // Check if we can split the name into components
-        String[] splitTerms = terms.split("\\s");
-        if (splitTerms.length > 1) {
-            for (String splitTerm : splitTerms) {
-                String term = ParseUtil.cleanTerm(splitTerm);
-                if (term.isEmpty()) { continue; }
-                if (term.startsWith("+")) {                    
-                    builders.add(new BuilderModel(getQueryBuilder(field, term.substring(1)), QUERY, SHOULD));
-                } else if (term.startsWith("-")){
-                    builders.add(new BuilderModel(getQueryBuilder(field, term.substring(1)), QUERY, MUST_NOT));
-                } else {
-                    builders.add(new BuilderModel(getQueryBuilder(field, term), QUERY, MUST));
+    public static List<BuilderModel> addAllSelections(List<BuilderModel> builders, List<FacetRequest> previousRequest) {
+        for (FacetRequest request: previousRequest) {
+            List<SelectableFacet> selected = FacetUtil.getSelections(request.getSelectables());
+            if (selected != null) {
+                for (SelectableFacet select: selected) {
+                    builders.add(new BuilderModel(getQueryBuilder(request.getField().getName(), select.getName()), QUERY, MUST));
                 }
             }
-        } else {
-            // No split, just add
-            String term = ParseUtil.cleanTerm(terms);
-            if (term.startsWith("+")) {                    
-                builders.add(new BuilderModel(getQueryBuilder(field, term.substring(1)), QUERY, SHOULD));
-            } else if (term.startsWith("-")){
-                builders.add(new BuilderModel(getQueryBuilder(field, term.substring(1)), QUERY, MUST_NOT));
-            } else {
-                builders.add(new BuilderModel(getQueryBuilder(field, term), QUERY, MUST));
-            }
         }
+        
+        return builders;
     }
-    
-    /**
-     * Split on whitespace, and add all names to builder
-     * @param builders
-     * @param terms
-     * @param field 
-     */
-    public static void addAllScreenNames(List<BuilderModel> builders, String terms, String field) {
-        // Check if we can split the name into components
-        String[] splitTerms = terms.split("\\s");
-        if (splitTerms.length > 1) {
-            for (String term : splitTerms) {
-                if (term.isEmpty()) { continue; }
-                if (term.startsWith("+")) {                    
-                    builders.add(new BuilderModel(getQueryBuilder(field, term.substring(1)), QUERY, SHOULD));
-                } else if (term.startsWith("-")){
-                    builders.add(new BuilderModel(getQueryBuilder(field, term.substring(1)), QUERY, MUST_NOT));
-                } else {
-                    builders.add(new BuilderModel(getQueryBuilder(field, term), QUERY, MUST));
-                }
-            }
-        } else {
-            // No split, just add
-            String term = terms;
-            if (term.startsWith("+")) {                    
-                builders.add(new BuilderModel(getQueryBuilder(field, term.substring(1)), QUERY, SHOULD));
-            } else if (term.startsWith("-")){
-                builders.add(new BuilderModel(getQueryBuilder(field, term.substring(1)), QUERY, MUST_NOT));
-            } else {
-                builders.add(new BuilderModel(getQueryBuilder(field, term), QUERY, MUST));
-            }
-        }
-    }
-
-    /**
-     * Split on whitespace, and add all names to builder
-     * @param builders
-     * @param terms
-     * @param field 
-     */
-    public static void addAllTermsAsFilters(List<BuilderModel> builders, String terms, String field) {
-        // Check if we can split the name into components
-        String[] splitTerms = terms.split("\\s");
-        if (splitTerms.length > 1) {
-            for (String splitTerm : splitTerms) {
-                String term = ParseUtil.cleanTerm(splitTerm);
-                if (term.isEmpty()) { continue; }
-                if (term.startsWith("+")) {                    
-                    builders.add(new BuilderModel(getFilterBuilder(field, term.substring(1)), FILTER, SHOULD));
-                } else if (term.startsWith("-")){
-                    builders.add(new BuilderModel(getFilterBuilder(field, term.substring(1)), FILTER, MUST_NOT));
-                } else {
-                    builders.add(new BuilderModel(getFilterBuilder(field, term), FILTER, MUST));
-                }
-            }
-        } else {
-            // No split, just add
-            String term = ParseUtil.cleanTerm(terms);
-            if (term.startsWith("+")) {                    
-                builders.add(new BuilderModel(getFilterBuilder(field, term.substring(1)), FILTER, SHOULD));
-            } else if (term.startsWith("-")){
-                builders.add(new BuilderModel(getFilterBuilder(field, term.substring(1)), FILTER, MUST_NOT));
-            } else {
-                builders.add(new BuilderModel(getFilterBuilder(field, term), FILTER, MUST));
-            }
-        }
-    }
-}
+ }

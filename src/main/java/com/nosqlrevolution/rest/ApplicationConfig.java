@@ -26,7 +26,6 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.nosqlrevolution.rest.CountResource.class);
         resources.add(com.nosqlrevolution.rest.CrossOriginResourceSharingFilter.class);
-        resources.add(com.nosqlrevolution.rest.FacetResource.class);
         resources.add(com.nosqlrevolution.rest.MltResource.class);
         resources.add(com.nosqlrevolution.rest.SearchResource.class);
     }

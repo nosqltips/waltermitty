@@ -1,27 +1,23 @@
 package com.nosqlrevolution.service;
 
-import com.nosqlrevolution.enums.Field;
 import com.nosqlrevolution.model.BuilderModel;
 import com.nosqlrevolution.model.BuilderModel.BooleanType;
-import org.elasticsearch.action.search.SearchRequestBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import java.util.ArrayList;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.action.search.SearchResponse;
+import com.nosqlrevolution.model.FacetRequest;
 import com.nosqlrevolution.model.SearchQuery;
-import com.nosqlrevolution.model.SearchResult;
-import com.nosqlrevolution.model.SimpleFacet;
 import com.nosqlrevolution.util.FacetUtil;
 import com.nosqlrevolution.util.QueryUtil;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.facet.FacetBuilder;
 
 /**
  * 
@@ -37,55 +33,44 @@ public class SearchService implements Serializable {
      * @param sq
      * @return 
      */
-    public SearchResult search(SearchQuery sq) {
+    public SearchQuery search(SearchQuery sq) {
         // Set page sizes to passed in values if not already set in query parser
-        if (sq.getPageSize() == -1) {
-            sq.setPageSize(ClientService.SIZE);
+        // Try and verify paging parameters
+        if (sq.getPageFrom() == null || sq.getPageFrom() < 0) {
+            sq.setPageFrom(0);
         }
-        //if (sq.getPageFrom() == -1) {
-            //sq.setPageFrom(ClientService.FROM);
-            sq.setPageFrom((sq.getPage() -1)  * sq.getPageSize());
-        //}
+        if (sq.getPageSize() == null || sq.getPageSize() < 1) {
+            sq.setPageSize(20);
+        }
 
-        ArrayList<BuilderModel> builders = new ArrayList<>();
-        if (sq.getTerms() != null) {
-            QueryUtil.addAllTerms(builders, sq.getTerms(), Field.TEXT.getName());
-        } else if (sq.getScreenName() != null) {
-            QueryUtil.addAllScreenNames(builders, sq.getScreenName(), "user.screen_name");
-        } else {
-            return null;
-        }
+        List<BuilderModel> builders = QueryUtil.addAllSelections(new ArrayList<BuilderModel>(), sq.getFacets());
 
         QueryBuilder qb;
         if ((builders.size() > 1) || (builders.get(0).getBooleanType() != BooleanType.MUST)) {
             qb = QueryUtil.getBooleanQuery(builders);
         } else {
-//            if (builders.get(0).getQueryType().equals(QueryType.QUERY)) {
-                qb = builders.get(0).getQueryBuilder();
-//            } else {
-//                qb = QueryUtil.getFilteredQuery(null, builders.get(0).getFilterBuilder());
-//            }
+            qb = builders.get(0).getQueryBuilder();
         }
 
-        SortBuilder sort = new FieldSortBuilder(Field.CREATED_AT.getName());
-        sort.order(SortOrder.DESC);
-        
         SearchRequestBuilder builder = client.prepareSearch(ClientService.INDEX)
-                .setSearchType(SearchType.QUERY_THEN_FETCH)
+                .setSearchType(SearchType.DFS_QUERY_AND_FETCH)
                 .setQuery(qb)
                 .setFrom(sq.getPageFrom())
-                .setSize(sq.getPageSize())
-                .addSort(sort);
+                .setSize(sq.getPageSize());
         
-        // Add facets
-        builder.addFacet(FacetUtil.getTermsFacet(Field.TEXT.getName(), 10, "terms"));
-        builder.addFacet(FacetUtil.getTermsFacet(Field.USER_SCREEN_NAME.getName(), 10, "tweeters"));
+        // Add all Facets
+        List<FacetBuilder> facetBuilders = FacetUtil.addAllFacets(FacetService.getDefaultFacets());
+        if (facetBuilders != null) {
+            for (FacetBuilder facetBuilder: facetBuilders) {
+                builder.addFacet(facetBuilder);
+            }
+        }
         System.out.println("Builder=" + builder.toString());
         
         SearchResponse response = builder.execute().actionGet();
-        Map<String, List<SimpleFacet>> facets = null;
+        List<FacetRequest> facets = null;
         if (response.getFacets() != null) {
-            facets = FacetUtil.generateMultipleTermFacetOutput(response.getFacets().facets());
+            facets = SearchResultService.generateFacetOutput(response.getFacets().facets(), sq.getFacets());
         }
         
         // Update the SearchQuery results
@@ -95,43 +80,6 @@ public class SearchService implements Serializable {
         sq.setAvailableResults(h.getHits().length);
         
         System.out.println("SearchService " + response.getHits().getTotalHits());
-        return new SearchResult(sq, SearchResultService.generateSearchOutput(h.getHits()), facets);
-    }
-
-    /**
-     * Grab the top N results ordered by most recent.
-     * 
-     * @param sq
-     * @return 
-     */
-    public SearchResult searchTopN(SearchQuery sq) {
-        // Set page sizes to passed in values if not already set in query parser
-        if (sq.getPageSize() == -1) {
-            sq.setPageSize(ClientService.SIZE);
-        }
-        if (sq.getPageFrom() == -1) {
-            sq.setPageFrom(ClientService.FROM);
-        }
-
-        SortBuilder sort = new FieldSortBuilder(Field.CREATED_AT.getName());
-        sort.order(SortOrder.DESC);
-        
-        SearchRequestBuilder builder = client.prepareSearch(ClientService.INDEX)
-                .setSearchType(SearchType.QUERY_THEN_FETCH)
-                .setQuery(QueryUtil.getMatchAllQuery())
-                .setFrom(sq.getPageFrom())
-                .setSize(sq.getPageSize())
-                .addSort(sort);
-        
-        SearchResponse response = builder.execute().actionGet();
-        
-        // Update the SearchQuery results
-        SearchHits h = response.getHits();
-        sq.setTimeMillis(Long.toString(response.getTookInMillis()));
-        sq.setTotalResults(h.getTotalHits());
-        sq.setAvailableResults(h.getHits().length);
-        
-        System.out.println("TopN " + response.getHits().getTotalHits());
-        return new SearchResult(sq, SearchResultService.generateSearchOutput(h.getHits()));
+        return new SearchQuery(SearchResultService.generateSearchOutput(h.getHits()), facets);
     }
 }

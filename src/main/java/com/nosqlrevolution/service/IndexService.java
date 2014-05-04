@@ -20,7 +20,8 @@ public class IndexService implements Serializable {
 
         for (String source: sources) {
             builder.add(client.prepareIndex(ClientService.INDEX, ClientService.TYPE)
-                .setSource(source)
+                    .setId(SearchResultService.getMemberId(source))
+                    .setSource(source)
                 );
         }
         

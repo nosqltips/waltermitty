@@ -4,77 +4,88 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 public class Result implements Serializable {
-    private String docId;
-    private Long userId;
-    private String text;
-    private String source;
-    private String createdAt;
-    private String screenName;
+    private String memberId;
+    private String state;
+    private String zip;
+    private String birthYear;
+    private String numDependents;
+    private String numPayments;
+    private String numClaims;
     
-    private float score;
+    private Float score;
             
     public Result() {}
- 
-    @JsonProperty("docId")
-    public String getDocId() {
-        return docId;
+
+    @JsonProperty("memberId")
+    public String getMemberId() {
+        return memberId;
     }
 
-    @JsonProperty("docId")
-    public void setDocId(String docId) {
-        this.docId = docId;
+    @JsonProperty("memberId")
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
-    @JsonProperty("userId")
-    public Long getUserId() {
-        return userId;
+    @JsonProperty("state")
+    public String getState() {
+        return state;
     }
 
-    @JsonProperty("userId")
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    @JsonProperty("state")
+    public void setState(String state) {
+        this.state = state;
     }
 
-    @JsonProperty("text")
-    public String getText() {
-        return text;
+    @JsonProperty("zip")
+    public String getZip() {
+        return zip;
     }
 
-    @JsonProperty("text")
-    public void setText(String text) {
-        this.text = text;
+    @JsonProperty("zip")
+    public void setZip(String zip) {
+        this.zip = zip;
     }
 
-    @JsonProperty("source")
-    public String getSource() {
-        return source;
+    @JsonProperty("birthYear")
+    public String getBirthYear() {
+        return birthYear;
     }
 
-    @JsonProperty("source")
-    public void setSource(String source) {
-        this.source = source;
+    @JsonProperty("birthYear")
+    public void setBirthYear(String birthYear) {
+        this.birthYear = birthYear;
     }
 
-    @JsonProperty("createdAt")
-    public String getCreatedAt() {
-        return createdAt;
+    @JsonProperty("numDependents")
+    public String getNumDependents() {
+        return numDependents;
     }
 
-    @JsonProperty("createdAt")
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    @JsonProperty("numDependents")
+    public void setNumDependents(String numDependents) {
+        this.numDependents = numDependents;
     }
 
-    @JsonProperty("screenName")
-    public String getScreenName() {
-        return screenName;
+    @JsonProperty("numPayments")
+    public String getNumPayments() {
+        return numPayments;
     }
 
-    @JsonProperty("screenName")
-    public void setScreenName(String screenName) {
-        this.screenName = screenName;
+    @JsonProperty("numPayments")
+    public void setNumPayments(String numPayments) {
+        this.numPayments = numPayments;
     }
 
+    @JsonProperty("numClaims")
+    public String getNumClaims() {
+        return numClaims;
+    }
+
+    @JsonProperty("numClaims")
+    public void setNumClaims(String numClaims) {
+        this.numClaims = numClaims;
+    }
+    
     @JsonProperty("score")
     public float getScore() {
         return score;
@@ -88,7 +99,7 @@ public class Result implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (getUserId() != null ? getUserId().hashCode() : 0);
+        hash += (getMemberId()!= null ? getMemberId().hashCode() : 0);
         return hash;
     }
 
@@ -99,11 +110,11 @@ public class Result implements Serializable {
             return false;
         }
         Result other = (Result) object;
-        return (this.getUserId() != null || other.getUserId() == null) && (this.getUserId() == null || this.userId.equals(other.getUserId()));
+        return (this.getMemberId() != null || other.getMemberId() == null) && (this.getMemberId() == null || this.getMemberId().equals(other.getMemberId()));
     }
 
     @Override
     public String toString() {
-        return "com.nosqlrevolution.model.DisplayValue[ itemId=" + getUserId() + " ]";
+        return "Result[ memberId=" + getMemberId() + " ]";
     }
 }
