@@ -22,7 +22,9 @@ public enum FacetField {
     TOTAL_BALANCES("totalOfBalances", "Total Balances"),
     NUM_CLAIMS("numberOfClaims", "Number of Claims"),
     TOTAL_CLAIMS("totalClaimsRepricedAmount", "Total Claims"),
-    TOTAL_CLAIMS_PATIENT("totalClaimsPatientResponsibilityAmount", "Total Claims Patient");
+    TOTAL_CLAIMS_PATIENT("totalClaimsPatientResponsibilityAmount", "Total Claims Patient"),
+    CPT_CODES_ALL("cptCodesAll", "CPT Codes All"),
+    CPT_CODES_UNIQUE("cptCodesUnique", "CPT Codes Unique");
     
     private final String name;
     private final String display;

@@ -86,6 +86,8 @@ public class FacetUtil {
                 case TOTAL_EMPLOYEE_CONTRIBUTIONS:
                 case TOTAL_EMPLOYER_CONTRIBUTIONS:
                 case TOTAL_PAYMENTS:
+                case CPT_CODES_ALL:
+                case CPT_CODES_UNIQUE:
                     facetBuilders.add(getTermsFacet(request.getField(), request.getSize()));
                     break;
             }

@@ -23,7 +23,9 @@ public enum SearchField {
     TOTAL_BALANCES("totalOfBalances"),
     NUM_CLAIMS("numberOfClaims"),
     TOTAL_CLAIMS("totalClaimsRepricedAmount"),
-    TOTAL_CLAIMS_PATIENT("totalClaimsPatientResponsibilityAmount");
+    TOTAL_CLAIMS_PATIENT("totalClaimsPatientResponsibilityAmount"),
+    CPT_CODES_ALL("cptCodesAll"),
+    CPT_CODES_UNIQUE("cptCodesUnique");
     
     private final String name;
     SearchField(String name) {

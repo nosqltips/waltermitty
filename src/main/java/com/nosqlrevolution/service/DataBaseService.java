@@ -6,6 +6,12 @@ import com.nosqlrevolution.model.data.ClaimDetail;
 import com.nosqlrevolution.model.data.Member;
 import com.nosqlrevolution.model.data.Claim;
 import com.nosqlrevolution.model.data.Balance;
+import com.nosqlrevolution.model.data.Balance;
+import com.nosqlrevolution.model.data.Claim;
+import com.nosqlrevolution.model.data.ClaimDetail;
+import com.nosqlrevolution.model.data.ContributionsAndPayments;
+import com.nosqlrevolution.model.data.Dependent;
+import com.nosqlrevolution.model.data.Member;
 import com.nosqlrevolution.waltermitty.App;
 
 import java.sql.*;
