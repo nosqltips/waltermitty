@@ -2,6 +2,7 @@ package com.nosqlrevolution.rest;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 /**
  *
@@ -28,6 +29,6 @@ public class ApplicationConfig extends Application {
         resources.add(com.nosqlrevolution.rest.CrossOriginResourceSharingFilter.class);
         resources.add(com.nosqlrevolution.rest.MltResource.class);
         resources.add(com.nosqlrevolution.rest.SearchResource.class);
+        resources.add(MultiPartFeature.class);
     }
-    
 }

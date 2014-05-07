@@ -15,10 +15,8 @@ import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
  */
 public class ClientService {
     private static final Logger log = Logger.getLogger(ClientService.class.getName());
-    public final static String INDEX = "twitter";
+    public final static String INDEX = "member";
     public final static String TYPE = "status";
-    public final static String TOPTAGSINDEX = "toptags";
-    public final static String TRENDINGINDEX = "trending";
     public final static int FROM = 0;
     public final static int SIZE = 25;
 
@@ -29,16 +27,16 @@ public class ClientService {
     private void init() {
         System.out.println("Running with options " + INDEX + " " + TYPE);
         Settings settings = ImmutableSettings.settingsBuilder()
-                .put("cluster.name", "nosqlrevolution")
-                .put("discovery.zen.ping.unicast.hosts", "10.1.10.150")
-                .put("discovery.zen.ping.timeout", "10s")
-                .put("discovery.zen.ping.multicast.enabled", "false")
+                .put("cluster.name", "elasticsearch")
+//                .put("discovery.zen.ping.unicast.hosts", "10.1.10.150")
+//                .put("discovery.zen.ping.timeout", "10s")
+//                .put("discovery.zen.ping.multicast.enabled", "false")
                 .build();
         
         client = new TransportClient(settings)
                 .addTransportAddress(new InetSocketTransportAddress("10.1.10.150", 9300));
-//        Node node = nodeBuilder().settings(settings).client(true).data(false).node();
-//        client = node.client();
+        Node node = nodeBuilder().settings(settings).client(true).data(false).node();
+        client = node.client();
         client.admin().cluster().prepareHealth().setWaitForGreenStatus().execute().actionGet();
     }
 
