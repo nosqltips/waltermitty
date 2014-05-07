@@ -1,5 +1,6 @@
 package com.nosqlrevolution.service;
 
+import com.nosqlrevolution.enums.SearchField;
 import com.nosqlrevolution.model.BuilderModel;
 import com.nosqlrevolution.model.BuilderModel.BooleanType;
 import com.nosqlrevolution.model.FacetRequest;
@@ -46,10 +47,16 @@ public class SearchService implements Serializable {
         List<BuilderModel> builders = QueryUtil.addAllSelections(new ArrayList<BuilderModel>(), sq.getFacets());
 
         QueryBuilder qb;
-        if ((builders.size() > 1) || (builders.get(0).getBooleanType() != BooleanType.MUST)) {
-            qb = QueryUtil.getBooleanQuery(builders);
+        if (sq.getMemberId() == null && builders == null) {
+            return sq;
+        } else if (sq.getMemberId() != null && builders == null) {
+            qb = QueryUtil.getTermBuilder(SearchField.MEMBER_ID.getName(), sq.getMemberId());
         } else {
-            qb = builders.get(0).getQueryBuilder();
+            if ((builders.size() > 1) || (builders.get(0).getBooleanType() != BooleanType.MUST)) {
+                qb = QueryUtil.getBooleanQuery(builders);
+            } else {
+                qb = builders.get(0).getQueryBuilder();
+            }
         }
 
         SearchRequestBuilder builder = client.prepareSearch(ClientService.INDEX)
@@ -80,6 +87,8 @@ public class SearchService implements Serializable {
         sq.setAvailableResults(h.getHits().length);
         
         System.out.println("SearchService " + response.getHits().getTotalHits());
-        return new SearchQuery(SearchResultService.generateSearchOutput(h.getHits()), facets);
+        sq.setResults(SearchResultService.generateSearchOutput(h.getHits()));
+        sq.setFacets(facets);
+        return sq;
     }
 }

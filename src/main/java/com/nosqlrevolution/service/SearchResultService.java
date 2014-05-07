@@ -37,13 +37,13 @@ public class SearchResultService {
             Map<String, Object> fields = hit.sourceAsMap();
             //Map<String, String> display = (HashMap) fields.get(Field.DISPLAY_VALUES.getName());
             Result result = new Result();
-            result.setMemberId((String) fields.get(SearchField.MEMBER_ID.getName()));
+            result.setMemberId(getMemberId(fields.get(SearchField.MEMBER_ID.getName())));
             result.setState((String) fields.get(SearchField.STATE.getName()));
             result.setZip((String) fields.get(SearchField.ZIP.getName()));
             result.setBirthYear((String) fields.get(SearchField.BIRTH_YEAR.getName()));
-            result.setNumDependents((String) fields.get(SearchField.NUM_DEPENDENTS.getName()));
-            result.setNumPayments((String) fields.get(SearchField.NUM_PAYMENTS.getName()));
-            result.setNumClaims((String) fields.get(SearchField.NUM_CLAIMS.getName()));
+            result.setNumDependents((Integer) fields.get(SearchField.NUM_DEPENDENTS.getName()));
+            result.setNumPayments((Integer) fields.get(SearchField.NUM_PAYMENTS.getName()));
+            result.setNumClaims((Integer) fields.get(SearchField.NUM_CLAIMS.getName()));
             values.add(result);           
         }
         
@@ -86,6 +86,22 @@ public class SearchResultService {
             member = mapper.readValue(source, Member.class);
             return Integer.toString(member.getNewMemberID());
         } catch (IOException ex) {
+            Logger.getLogger(SearchResultService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+
+    /**
+     * Get the member id from the source.
+     * 
+     * @param id
+     * @return 
+     */
+    public static String getMemberId(Object id) {
+        try {
+            return Integer.toString((Integer) id);
+        } catch (NumberFormatException ex) {
             Logger.getLogger(SearchResultService.class.getName()).log(Level.SEVERE, null, ex);
         }
         

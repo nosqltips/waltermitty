@@ -25,26 +25,26 @@ import org.elasticsearch.search.facet.terms.TermsFacet.Entry;
  */
 public class FacetUtil {
     public static FacetBuilder getTermsFacet(FacetField field, int size) {
-        return termsFacet(field.getDisplay())
+        return termsFacet(field.toString())
                 .field(field.getName())
                 .size(size);
     }
 
     public static FacetBuilder getHistogramFacet(FacetField field, int interval) {
-        return histogramFacet(field.getDisplay())
+        return histogramFacet(field.toString())
                 .field(field.getName())
                 .interval(interval);
     }
 
     // Calculations are normalized to UTC. This can be changed.
     public static FacetBuilder getDateHistogramFacet(FacetField field, String interval) {
-        return dateHistogramFacet(field.getDisplay())
+        return dateHistogramFacet(field.toString())
                 .field(field.getName())
                 .interval(interval);
     }
 
     public static RangeFacetBuilder getRangeFacet(FacetField field, double start, double end) {
-        return rangeFacet(field.getDisplay())
+        return rangeFacet(field.toString())
                 .field(field.getName())
                 .addRange(start, end);
     }
@@ -101,6 +101,7 @@ public class FacetUtil {
      * 
      * @param facet
      * @param facetField
+     * @param previousSelections
      * @return 
      */
     public static List<SelectableFacet> parseSingleFacet(Facet facet, FacetField facetField, List<SelectableFacet> previousSelections) {
@@ -127,6 +128,7 @@ public class FacetUtil {
      *
      * @param termsFacet
      * @param facetField
+     * @param previousSelections
      * @return
      */
     public static List<SelectableFacet> parseTermsFacet(TermsFacet termsFacet, FacetField facetField, List<SelectableFacet> previousSelections) {
@@ -134,7 +136,7 @@ public class FacetUtil {
         for (Entry entry : termsFacet.getEntries()) {
             try {
                 facets.add(
-                        new SelectableFacet()
+                    new SelectableFacet()
                         .setName(entry.getTerm().toString())
                         .setCount(entry.getCount())
                         .setSelected(hasSelection(entry.getTerm().toString(), previousSelections))
@@ -152,6 +154,7 @@ public class FacetUtil {
      *
      * @param histogramFacet
      * @param facetField
+     * @param previousSelections
      * @return
      */
     public static List<SelectableFacet> parseHistogramFacet(HistogramFacet histogramFacet, FacetField facetField, List<SelectableFacet> previousSelections) {
@@ -159,7 +162,7 @@ public class FacetUtil {
         for (HistogramFacet.Entry entry : histogramFacet.getEntries()) {
             try {
                 facets.add(
-                        new SelectableFacet()
+                    new SelectableFacet()
                         .setName(Long.toString(entry.getKey()))
                         .setCount(entry.getCount())
                         .setSelected(hasSelection(Long.toString(entry.getKey()), previousSelections))
@@ -185,7 +188,7 @@ public class FacetUtil {
         for (DateHistogramFacet.Entry entry : histogramFacet.getEntries()) {
             try {
                 facets.add(
-                        new SelectableFacet()
+                    new SelectableFacet()
                         .setName(new Date(entry.getTime()).toString())
                         .setCount(entry.getCount())
                         .setSelected(hasSelection(new Date(entry.getTime()).toString(), previousSelections))
@@ -211,7 +214,7 @@ public class FacetUtil {
         for (RangeFacet.Entry entry : rangeFacet.getEntries()) {
             try {
                 facets.add(
-                        new SelectableFacet()
+                    new SelectableFacet()
                         .setName(entry.getFromAsString())
                         .setCount(entry.getCount())
                         .setSelected(hasSelection(entry.getFromAsString(), previousSelections))
@@ -232,6 +235,8 @@ public class FacetUtil {
      * @return 
      */
     public static List<SelectableFacet> getPreviousSelections(FacetField field, List<FacetRequest> previousRequests) {
+        if (previousRequests == null) { return null; }
+        
         for (FacetRequest request: previousRequests) {
             if (request.getField() == field) {
                 return request.getSelectables();
@@ -249,6 +254,8 @@ public class FacetUtil {
      * @return 
      */
     public static boolean hasSelection(String facetName, List<SelectableFacet> selectables) {
+        if (selectables == null) { return false; }
+        
         for (SelectableFacet selectable: selectables) {
             if ((selectable.getName().equals(facetName)) && selectable.isSelected()) {
                 return true;
@@ -265,6 +272,8 @@ public class FacetUtil {
      * @return 
      */
     public static List<SelectableFacet> getSelections(List<SelectableFacet> selectables) {
+        if (selectables == null) { return null; }
+        
         List<SelectableFacet> selected = new ArrayList<>();
         for (SelectableFacet selectable: selectables) {
             if (selectable.isSelected()) {

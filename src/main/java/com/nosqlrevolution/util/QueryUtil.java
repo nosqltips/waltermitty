@@ -40,6 +40,10 @@ public class QueryUtil {
         return bq;
     }
 
+    public static QueryBuilder getTermBuilder(String field, String value) {
+        return termQuery(field, value);
+    }
+    
     public static QueryBuilder getGtRangeQuery(String field, String value) {
         return rangeQuery(field)
                 .gte(value);
@@ -157,6 +161,8 @@ public class QueryUtil {
      * @return 
      */
     public static List<BuilderModel> addAllSelections(List<BuilderModel> builders, List<FacetRequest> previousRequest) {
+        if (previousRequest == null) { return null; }
+        
         for (FacetRequest request: previousRequest) {
             List<SelectableFacet> selected = FacetUtil.getSelections(request.getSelectables());
             if (selected != null) {
