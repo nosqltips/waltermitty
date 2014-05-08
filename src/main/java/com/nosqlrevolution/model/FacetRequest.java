@@ -1,5 +1,6 @@
 package com.nosqlrevolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nosqlrevolution.enums.FacetField;
 import java.io.Serializable;
@@ -36,6 +37,12 @@ public class FacetRequest implements Serializable {
     @JsonProperty("field")
     public FacetRequest setField(FacetField field) {
         this.field = field;
+        return this;
+    }
+
+    @JsonIgnore
+    public FacetRequest setField(String fieldName) {
+        this.field = FacetField.valueOf(fieldName);
         return this;
     }
 

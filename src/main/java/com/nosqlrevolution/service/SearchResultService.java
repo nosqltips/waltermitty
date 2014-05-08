@@ -41,9 +41,11 @@ public class SearchResultService {
             result.setState((String) fields.get(SearchField.STATE.getName()));
             result.setZip((String) fields.get(SearchField.ZIP.getName()));
             result.setBirthYear((String) fields.get(SearchField.BIRTH_YEAR.getName()));
+            result.setGender((String) fields.get(SearchField.GENDER.getName()));
             result.setNumDependents((Integer) fields.get(SearchField.NUM_DEPENDENTS.getName()));
             result.setNumPayments((Integer) fields.get(SearchField.NUM_PAYMENTS.getName()));
             result.setNumClaims((Integer) fields.get(SearchField.NUM_CLAIMS.getName()));
+            result.setScore(hit.getScore());
             values.add(result);           
         }
         

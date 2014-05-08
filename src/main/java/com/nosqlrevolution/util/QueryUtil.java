@@ -4,6 +4,7 @@ import com.nosqlrevolution.enums.Wildcard;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import com.nosqlrevolution.model.BuilderModel;
+import com.nosqlrevolution.model.BuilderModel.BooleanType;
 import java.util.List;
 import org.elasticsearch.index.query.FilterBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -158,16 +159,17 @@ public class QueryUtil {
      * 
      * @param builders
      * @param previousRequest
+     * @param boolType
      * @return 
      */
-    public static List<BuilderModel> addAllSelections(List<BuilderModel> builders, List<FacetRequest> previousRequest) {
+    public static List<BuilderModel> addAllSelections(List<BuilderModel> builders, List<FacetRequest> previousRequest, BooleanType boolType) {
         if (previousRequest == null) { return null; }
         
         for (FacetRequest request: previousRequest) {
             List<SelectableFacet> selected = FacetUtil.getSelections(request.getSelectables());
             if (selected != null) {
                 for (SelectableFacet select: selected) {
-                    builders.add(new BuilderModel(getQueryBuilder(request.getField().getName(), select.getName()), QUERY, MUST));
+                    builders.add(new BuilderModel(getQueryBuilder(request.getField().getName(), select.getName()), QUERY, boolType));
                 }
             }
         }

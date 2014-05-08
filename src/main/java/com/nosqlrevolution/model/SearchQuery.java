@@ -1,7 +1,9 @@
 package com.nosqlrevolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchQuery implements Serializable {    
@@ -101,6 +103,14 @@ public class SearchQuery implements Serializable {
     @JsonProperty("facets")
     public void setFacets(List<FacetRequest> facets) {
         this.facets = facets;
+    }
+    
+    @JsonIgnore
+    public void addFacet(FacetRequest facet) {
+        if (facets == null) {
+            facets = new ArrayList<>();
+        }
+        facets.add(facet);
     }
     
     @Override

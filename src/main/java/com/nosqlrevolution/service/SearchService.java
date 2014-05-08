@@ -44,11 +44,20 @@ public class SearchService implements Serializable {
             sq.setPageSize(20);
         }
 
-        List<BuilderModel> builders = QueryUtil.addAllSelections(new ArrayList<BuilderModel>(), sq.getFacets());
+        List<BuilderModel> builders = QueryUtil.addAllSelections(new ArrayList<BuilderModel>(), sq.getFacets(), BooleanType.MUST);
 
+        return search(sq, builders);
+    }
+    
+    public SearchQuery search(SearchQuery sq, List<BuilderModel> builders) {
         QueryBuilder qb;
+        
+        // If there is nothing interesting, then send mack all facets with no results.
+        // This is good for populating the first page.
         if (sq.getMemberId() == null && builders == null) {
-            return sq;
+            qb = QueryUtil.getMatchAllQuery();
+            sq.setPageFrom(0);
+            sq.setPageSize(0);
         } else if (sq.getMemberId() != null && builders == null) {
             qb = QueryUtil.getTermBuilder(SearchField.MEMBER_ID.getName(), sq.getMemberId());
         } else {
@@ -60,7 +69,7 @@ public class SearchService implements Serializable {
         }
 
         SearchRequestBuilder builder = client.prepareSearch(ClientService.INDEX)
-                .setSearchType(SearchType.DFS_QUERY_AND_FETCH)
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(qb)
                 .setFrom(sq.getPageFrom())
                 .setSize(sq.getPageSize());

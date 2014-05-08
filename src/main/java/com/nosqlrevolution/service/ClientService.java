@@ -28,13 +28,13 @@ public class ClientService {
         System.out.println("Running with options " + INDEX + " " + TYPE);
         Settings settings = ImmutableSettings.settingsBuilder()
                 .put("cluster.name", "elasticsearch")
-//                .put("discovery.zen.ping.unicast.hosts", "10.1.10.150")
-//                .put("discovery.zen.ping.timeout", "10s")
-//                .put("discovery.zen.ping.multicast.enabled", "false")
+                .put("discovery.zen.ping.unicast.hosts", "10.1.10.150")
+                .put("discovery.zen.ping.timeout", "10s")
+                .put("discovery.zen.ping.multicast.enabled", "false")
                 .build();
         
-        client = new TransportClient(settings)
-                .addTransportAddress(new InetSocketTransportAddress("10.1.10.150", 9300));
+//        client = new TransportClient(settings)
+//                .addTransportAddress(new InetSocketTransportAddress("10.1.10.150", 9300));
         Node node = nodeBuilder().settings(settings).client(true).data(false).node();
         client = node.client();
         client.admin().cluster().prepareHealth().setWaitForGreenStatus().execute().actionGet();

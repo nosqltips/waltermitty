@@ -35,8 +35,8 @@ public class FacetService implements Serializable {
             facetRequests.add(new FacetRequest(FacetField.TOTAL_EMPLOYEE_CONTRIBUTIONS));
             facetRequests.add(new FacetRequest(FacetField.TOTAL_EMPLOYER_CONTRIBUTIONS));
             facetRequests.add(new FacetRequest(FacetField.TOTAL_PAYMENTS));
-            facetRequests.add(new FacetRequest(FacetField.CPT_CODES_ALL));
-            facetRequests.add(new FacetRequest(FacetField.CPT_CODES_UNIQUE));
+            facetRequests.add(new FacetRequest(FacetField.CPT_CODES_ALL, 20));
+            facetRequests.add(new FacetRequest(FacetField.CPT_CODES_UNIQUE, 20));
 
             return facetRequests;
     }

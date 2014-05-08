@@ -51,8 +51,7 @@ public class SearchResource {
     @POST
     @Consumes("application/json")    
     @Produces("application/json")    
-    public SearchQuery search(
-            @FormDataParam("searchQuery") SearchQuery query) {
+    public SearchQuery search(SearchQuery query) {
         
         return search.search(query);
     }

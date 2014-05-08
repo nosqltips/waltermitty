@@ -8,6 +8,7 @@ public class Result implements Serializable {
     private String state;
     private String zip;
     private String birthYear;
+    private String gender;
     private Integer numDependents;
     private Integer numPayments;
     private Integer numClaims;
@@ -54,6 +55,16 @@ public class Result implements Serializable {
     @JsonProperty("birthYear")
     public void setBirthYear(String birthYear) {
         this.birthYear = birthYear;
+    }
+
+    @JsonProperty("gender")
+    public String getGender() {
+        return gender;
+    }
+
+    @JsonProperty("gender")
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     @JsonProperty("numDependents")
