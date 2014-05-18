@@ -138,7 +138,7 @@ public class FacetUtil {
                 facets.add(
                     new SelectableFacet()
                         .setName(entry.getTerm().toString())
-                        .setCount(entry.getCount())
+                        .setCount((long)entry.getCount())
                         .setSelected(hasSelection(entry.getTerm().toString(), previousSelections))
                 );
             } catch (NumberFormatException nfe) {
