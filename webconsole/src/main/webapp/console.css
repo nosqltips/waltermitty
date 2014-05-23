@@ -1,0 +1,189 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+  text-align: center;
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 800px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+  margin: 15px 6px 6px;
+}
+
+.facetPanel {
+    width: 100%;
+    height: 100%;
+}
+
+.facetPanelTitleLabel {
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 0;
+}
+
+.selectablePanel {
+    height: 20px;
+}
+
+.selectablePanelCheckBox {
+    width: 100%;
+    height: 100%;
+    padding: 2px 0;
+}
+
+.selectablePanelInnerVerticalPanel {
+    width: 100%;
+    height: 100%;
+}
+
+.northPanel {
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+
+    /* red color */
+    /*background-color: #b34040;*/
+    /*filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#b34040, endColorstr=#d99f9f);*/
+    /*background-image: -moz-linear-gradient(top, #b34040 0%, #d99f9f 100%);*/
+    /*background-image: -webkit-linear-gradient(top, #b34040 0%, #d99f9f 100%);*/
+    /*background-image: -ms-linear-gradient(top, #b34040 0%, #d99f9f 100%);*/
+    /*background-image: linear-gradient(top, #b34040 0%, #d99f9f 100%);*/
+    /*background-image: -o-linear-gradient(top, #b34040 0%, #d99f9f 100%);*/
+    /*background-image: -webkit-gradient(linear, right top, right bottom, color-stop(0%,#b34040), color-stop(100%,#d99f9f));*/
+
+
+     /*blue color*/
+    background-color: #000099;
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#000099, endColorstr=#e6ecf9);
+    background-image: -moz-linear-gradient(top, #000099 0%, #e6ecf9 100%);
+    background-image: -webkit-linear-gradient(top, #000099 0%, #e6ecf9 100%);
+    background-image: -ms-linear-gradient(top, #000099 0%, #e6ecf9 100%);
+    background-image: linear-gradient(top, #000099 0%, #e6ecf9 100%);
+    background-image: -o-linear-gradient(top, #000099 0%, #e6ecf9 100%);
+    background-image: -webkit-gradient(linear, right top, right bottom, color-stop(0%,#000099), color-stop(100%,#e6ecf9));
+}
+
+.northPanelTitle {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+    padding-top: 17px;
+}
+
+.southPanel {
+    width: 100%;
+    height: 100%;
+    background-color: #EDEDED;
+    border-top: 1px solid #CCCCCC;
+}
+.southPanelLabel {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.westPanel {
+    background-color: #EDEDED;
+    width: 100%;
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+
+.westPanelTopPanel {
+    background-color: #EDEDED;
+    border-bottom: 1px solid #CCCCCC;
+    width: 100%;
+}
+
+.westPanelTopPanel td:first-child {
+    float: right;
+    padding-right: 3px;
+    padding-top: 2px;
+    vertical-align: middle;
+}
+
+.westPanelBottomPanel {
+    background-color: #EDEDED;
+    border-bottom: 1px solid #CCCCCC;
+    width: 100%;
+    height:100%;
+    padding-bottom: 3px;
+}
+
+.centerPanel {
+    width: 100%;
+    height: 100%;
+    vertical-align: top;
+    background-color: #E8E8E8;
+    border-left: 1px solid #CCCCCC;
+}
+
+.centerPanelResultsTable {
+    width: 100%;
+}
+
+.centerPanelResultsTable tbody {
+    height: 100%;
+}
+
+.centerPanelScrollPanel {
+    width: 100%;
+    height: 100%;
+}
+
+.pleaseWaitWidget {
+    padding: 25px;
+    background: #EDEDED;
+    border-radius: 3px;
+    z-index: 100;
+    border: 1px solid #ccc;
+}
+
+.facetScrollContainer {
+    position: absolute !important;
+    width: 100%;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.westPanelVertContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 2.5em;
+}
+.facetContainer {
+    width: 100%;
+    height: 100%;
+}
+

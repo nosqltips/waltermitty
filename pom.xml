@@ -5,6 +5,10 @@
     <groupId>com.nosqlrevolution</groupId>
     <artifactId>waltermitty</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <!--<modules>-->
+        <!--<module>webconsole</module>-->
+    <!--</modules>-->
+    <!--<packaging>pom</packaging>-->
     <packaging>war</packaging>
 
     <name>waltermitty</name>
