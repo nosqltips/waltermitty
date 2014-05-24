@@ -166,7 +166,7 @@ public class QueryUtil {
         if (previousRequest == null) { return null; }
         
         for (FacetRequest request: previousRequest) {
-            List<SelectableFacet> selected = FacetUtil.getSelections(request.getSelectables());
+            List<SelectableFacet> selected = AggregationUtil.getSelections(request.getSelectables());
             if (selected != null) {
                 for (SelectableFacet select: selected) {
                     builders.add(new BuilderModel(getQueryBuilder(request.getField().getName(), select.getName()), QUERY, boolType));

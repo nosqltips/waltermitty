@@ -1,13 +1,9 @@
 package com.nosqlrevolution.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nosqlrevolution.enums.FacetField;
 import com.nosqlrevolution.enums.SearchField;
-import com.nosqlrevolution.model.FacetRequest;
 import com.nosqlrevolution.model.Result;
-import com.nosqlrevolution.model.SelectableFacet;
 import com.nosqlrevolution.model.data.Member;
-import com.nosqlrevolution.util.FacetUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +11,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.facet.Facet;
 
 /**
  *
@@ -47,30 +42,6 @@ public class SearchResultService {
             result.setNumClaims((Integer) fields.get(SearchField.NUM_CLAIMS.getName()));
             result.setScore(hit.getScore());
             values.add(result);           
-        }
-        
-        return values;
-    }
-    
-    /**
-     * Generate all of the facets for the UI.
-     * 
-     * @param facets
-     * @param previousRequests
-     * @return 
-     */
-    public static List<FacetRequest> generateFacetOutput(List<Facet> facets, List<FacetRequest> previousRequests) {
-        List<FacetRequest> values = new ArrayList<>(facets.size());
-        for (Facet facet: facets) {
-            String facetName = facet.getName();
-            FacetField facetField = FacetField.valueOf(facetName);
-            List<SelectableFacet> previousSelections = FacetUtil.getPreviousSelections(facetField, previousRequests);
-            List<SelectableFacet> selectables = FacetUtil.parseSingleFacet(facet, facetField, previousSelections);
-            
-            values.add(new FacetRequest()
-                .setField(facetField)
-                .setSelectables(selectables)
-            );
         }
         
         return values;

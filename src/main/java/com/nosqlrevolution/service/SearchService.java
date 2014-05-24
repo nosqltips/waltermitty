@@ -5,12 +5,11 @@ import com.nosqlrevolution.model.BuilderModel;
 import com.nosqlrevolution.model.BuilderModel.BooleanType;
 import com.nosqlrevolution.model.FacetRequest;
 import com.nosqlrevolution.model.SearchQuery;
-import com.nosqlrevolution.util.FacetUtil;
+import com.nosqlrevolution.util.AggregationUtil;
 import com.nosqlrevolution.util.QueryUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -18,7 +17,7 @@ import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.facet.FacetBuilder;
+import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
 
 /**
  * 
@@ -74,11 +73,11 @@ public class SearchService implements Serializable {
                 .setFrom(sq.getPageFrom())
                 .setSize(sq.getPageSize());
         
-        // Add all Facets
-        List<FacetBuilder> facetBuilders = FacetUtil.addAllFacets(FacetService.getDefaultFacets());
-        if (facetBuilders != null) {
-            for (FacetBuilder facetBuilder: facetBuilders) {
-                builder.addFacet(facetBuilder);
+        // Add all Aggregations
+        List<AbstractAggregationBuilder> aggBuilders = AggregationUtil.addAllAggregations(AggregationService.getDefaultFacets());
+        if (aggBuilders != null) {
+            for (AbstractAggregationBuilder aggBuilder: aggBuilders) {
+                builder.addAggregation(aggBuilder);
             }
         }
         System.out.println("Builder=" + builder.toString());
@@ -86,7 +85,7 @@ public class SearchService implements Serializable {
         SearchResponse response = builder.execute().actionGet();
         List<FacetRequest> facets = null;
         if (response.getFacets() != null) {
-            facets = SearchResultService.generateFacetOutput(response.getFacets().facets(), sq.getFacets());
+            facets = AggregationUtil.parseAggregations(response.getAggregations(), sq.getFacets());
         }
         
         // Update the SearchQuery results

@@ -1,14 +1,19 @@
 package com.nosqlrevolution.util;
 
 import com.nosqlrevolution.enums.AggregationField;
+import com.nosqlrevolution.model.FacetRequest;
 import com.nosqlrevolution.model.SelectableFacet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
 import org.elasticsearch.search.aggregations.Aggregation;
+import static org.elasticsearch.search.aggregations.AggregationBuilders.*;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.global.Global;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram.Interval;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTerms;
@@ -18,243 +23,474 @@ import org.elasticsearch.search.aggregations.metrics.cardinality.Cardinality;
 import org.elasticsearch.search.aggregations.metrics.percentiles.Percentiles;
 import org.elasticsearch.search.aggregations.metrics.percentiles.Percentiles.Percentile;
 import org.elasticsearch.search.aggregations.metrics.stats.Stats;
-import static org.elasticsearch.search.aggregations.AggregationBuilders.*;
 
 /**
  *
  * @author cbrown
  */
 public class AggregationUtil {
-    public static AbstractAggregationBuilder getTerms(String name, String field, Integer size) {
+    private static final Logger logger = Logger.getLogger(AggregationUtil.class.getName());
+
+    public static AbstractAggregationBuilder getTerms(AggregationField field, Integer size) {
         if (size == null) { size = 10; }
-        return terms(name)
-                .field(field)
+        return terms(field.toString())
+                .field(field.getName())
                 .size(size);
     }
 
-    public static AbstractAggregationBuilder getAverage(String name, String field) {
-        return avg(name)
-                .field(field);
+    public static AbstractAggregationBuilder getAverage(AggregationField field) {
+        return avg(field.toString())
+                .field(field.getName());
     }
 
-    public static AbstractAggregationBuilder getCount(String name, String field) {
-        return count(name)
-                .field(field);
+    public static AbstractAggregationBuilder getCount(AggregationField field) {
+        return count(field.toString())
+                .field(field.getName());
     }
 
-    public static AbstractAggregationBuilder getStats(String name, String field) {
-        return stats(name)
-                .field(field);
+    public static AbstractAggregationBuilder getStats(AggregationField field) {
+        return stats(field.toString())
+                .field(field.getName());
     }
 
-    public static AbstractAggregationBuilder getSignificantTerms(String name, String field, Integer size) {
+    public static AbstractAggregationBuilder getSignificantTerms(AggregationField field, Integer size) {
         if (size == null) { size = 10; }
-        return significantTerms(name)
-                .field(field)
+        return significantTerms(field.toString())
+                .field(field.getName())
                 .size(size);
     }
 
-    public static AbstractAggregationBuilder getPercentiles(String name, String field, double[] percentiles) {
+    public static AbstractAggregationBuilder getPercentiles(AggregationField field, double[] percentiles) {
         if (percentiles == null || percentiles.length == 0) {
-            return percentiles(name)
-                    .field(field);
+            return percentiles(field.toString())
+                    .field(field.getName());
         } else {
-            return percentiles(name)
-                    .field(field)
+            return percentiles(field.toString())
+                    .field(field.getName())
                     .percentiles(percentiles);
         }
     }
 
-    public static AbstractAggregationBuilder getUnique(String name, String field) {
-        return cardinality(name)
-                .field(field);
+    public static AbstractAggregationBuilder getUnique(AggregationField field) {
+        return cardinality(field.toString())
+                .field(field.getName());
     }
 
-    public static AbstractAggregationBuilder getHistogram(String name, String field, long interval) {
-        return histogram(name)
-                .field(field)
+    public static AbstractAggregationBuilder getHistogram(AggregationField field, long interval) {
+        return histogram(field.toString())
+                .field(field.getName())
                 .interval(interval)
                 .minDocCount(0);
     }
 
-    public static AbstractAggregationBuilder getDateHistogram(String name, String field, long interval) {
-        return dateHistogram(name)
-                .field(field)
+    public static AbstractAggregationBuilder getDateHistogram(AggregationField field, Interval interval) {
+        return dateHistogram(field.toString())
+                .field(field.getName())
                 .interval(interval)
                 .minDocCount(0);
     }
 
-    public static AbstractAggregationBuilder getNested(String name, String path, AbstractAggregationBuilder subAggregation) {
-        return nested(name)
+    public static AbstractAggregationBuilder getNested(AggregationField field, String path, AbstractAggregationBuilder subAggregation) {
+        return nested(field.toString())
                 .path(path)
                 .subAggregation(subAggregation);
     }
 
+    /**
+     * Add all of the facet for the ElasticSearch request based on facet requests generated by the
+     * FacetDeterminationService and ProjectFacetDeterminationService.
+     *
+     * @param facetRequests
+     * @return
+     */
+    public static List<AbstractAggregationBuilder> addAllAggregations(List<FacetRequest> facetRequests) {
+        if (facetRequests == null) {
+            return null;
+        }
 
-    public static void parseFacets(Aggregations aggregations) {
+        List<AbstractAggregationBuilder> facetBuilders = new ArrayList<>();
+        for (FacetRequest request : facetRequests) {
+            switch (request.getField()) {
+                case BIRTH_YEAR:
+                case GENDER:
+                case STATE:
+                case ZIP:
+                case NUM_BALANCES:
+                case NUM_CLAIMS:
+                case NUM_CONTRIBUTIONS:
+                case NUM_DEPENDENTS:
+                case NUM_EMPLOYEE_CONTRIBUTIONS:
+                case NUM_EMPOYER_CONTRIBUTIONS:
+                case NUM_PAYMENTS:
+                case TOTAL_BALANCES:
+                case TOTAL_CLAIMS:
+                case TOTAL_CLAIMS_PATIENT:
+                case TOTAL_CONTRIBUTIONS:
+                case TOTAL_EMPLOYEE_CONTRIBUTIONS:
+                case TOTAL_EMPLOYER_CONTRIBUTIONS:
+                case TOTAL_PAYMENTS:
+                case CPT_CODES_ALL:
+                case CPT_CODES_UNIQUE:
+                    facetBuilders.add(getTerms(request.getField(), request.getSize()));
+                    break;
+            }
+        }
+
+        return facetBuilders;
+    }
+
+    /**
+     * Parse all of the aggregations and return as a list of FacetRequests.
+     * 
+     * @param aggregations
+     * @param previousRequests
+     * @return 
+     */
+    public static List<FacetRequest> parseAggregations(Aggregations aggregations, List<FacetRequest> previousRequests) {
+        List<FacetRequest> requests = new ArrayList<>();
         for (Aggregation aggregation: aggregations.asList()) {
             try {
-                // Possibly need to parse name since we're piggy-backing additional data for date-based facets.
                 String aggName = aggregation.getName();
                 AggregationField aggField = AggregationField.valueOf(aggName);
 
-                List<SelectableFacet> nodes = parseSingleAggregation(aggregation, aggField);
+                List<SelectableFacet> previousSelections = getPreviousSelections(aggField, previousRequests);
+                List<SelectableFacet> selectables = parseSingleAggregation(aggregation, aggField, previousSelections);
+
+                if (selectables != null) {
+                    requests.add(new FacetRequest()
+                        .setField(aggField)
+                        .setSelectables(selectables)
+                    );
+                }
             } catch (Exception e) {                    
-//                LOG.warn("Could not add aggregation for type " + aggregation.getName());
-                e.printStackTrace();
+                logger.log(Level.WARNING, "Could not add aggregation for type {0}", aggregation.getName());
+                logger.log(Level.SEVERE, null, e);
             }
         }
+        
+        return ! requests.isEmpty() ? requests : null;
     }
     
-    public static List<SelectableFacet> parseSingleAggregation(Aggregation aggregation, AggregationField aggField) {
+    /**
+     * Parse a single aggregation and return as a list of SelectableFacets.
+     * 
+     * @param aggregation
+     * @param aggField
+     * @param previousSelections
+     * @return 
+     */
+    public static List<SelectableFacet> parseSingleAggregation(Aggregation aggregation, AggregationField aggField, List<SelectableFacet> previousSelections) {
         if (aggregation == null) {
             return null;
         }
 
         if (aggregation instanceof Terms) {
-            parseTerms((Terms) aggregation, aggField);
+            return parseTerms((Terms) aggregation, aggField, previousSelections);
         } else if (aggregation instanceof SignificantTerms) {
-            parseSignificantTerms((SignificantTerms) aggregation, aggField);
+            return parseSignificantTerms((SignificantTerms) aggregation, aggField, previousSelections);
         } else if (aggregation instanceof Histogram) {
-            parseHistogram((Histogram) aggregation, aggField);
+            return parseHistogram((Histogram) aggregation, aggField, previousSelections);
         } else if (aggregation instanceof DateHistogram) {
-            parseDateHistogram((DateHistogram) aggregation, aggField);
+            return parseDateHistogram((DateHistogram) aggregation, aggField, previousSelections);
         } else if (aggregation instanceof Range) {
-            parseRange((Range) aggregation, aggField);
+            return parseRange((Range) aggregation, aggField, previousSelections);
         } else if (aggregation instanceof Global) {
-            parseGlobal((Global) aggregation, aggField);
+            return parseGlobal((Global) aggregation, aggField, previousSelections);
         } else if (aggregation instanceof Avg) {
-            parseAvg((Avg) aggregation, aggField);
+            return parseAvg((Avg) aggregation, aggField);
         } else if (aggregation instanceof Cardinality) {
-            parseCardinality((Cardinality) aggregation, aggField);
+            return parseCardinality((Cardinality) aggregation, aggField);
         } else if (aggregation instanceof Percentiles) {
-            parsePercentiles((Percentiles) aggregation, aggField);
+            return parsePercentiles((Percentiles) aggregation, aggField);
         } else if (aggregation instanceof Stats) {
-            parseStats((Stats) aggregation, aggField);
+            return parseStats((Stats) aggregation, aggField);
         }
 
         return null;
     }
 
-    public static List<SelectableFacet> parseTerms(Terms terms, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
+    /**
+     * Parse all terms.
+     * 
+     * @param terms
+     * @param aggField
+     * @param previousSelections
+     * @return 
+     */
+    public static List<SelectableFacet> parseTerms(Terms terms, AggregationField aggField, List<SelectableFacet> previousSelections) {
+        List<SelectableFacet> selectables = new ArrayList<>();
         for (org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket bucket: terms.getBuckets()) {
-            simpleFacets.add(
-                    new SelectableFacet()
+            selectables.add(
+                new SelectableFacet()
                     .setName(bucket.getKey())
                     .setCount(bucket.getDocCount())
+                    .setSelected(hasSelection(bucket.getKey(), previousSelections))
             );
         }
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
-    public static List<SelectableFacet> parseSignificantTerms(SignificantTerms sigTerms, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
+    /**
+     * Parse all significant terms.
+     * 
+     * @param sigTerms
+     * @param aggField
+     * @param previousSelections
+     * @return 
+     */
+    public static List<SelectableFacet> parseSignificantTerms(SignificantTerms sigTerms, AggregationField aggField, List<SelectableFacet> previousSelections) {
+        List<SelectableFacet> selectables = new ArrayList<>();
         for (org.elasticsearch.search.aggregations.bucket.significant.SignificantTerms.Bucket bucket: sigTerms.getBuckets()) {
-            simpleFacets.add(
-                    new SelectableFacet()
+            selectables.add(
+                new SelectableFacet()
                     .setName(bucket.getKey())
                     .setCount(bucket.getDocCount())
+                    .setSelected(hasSelection(bucket.getKey(), previousSelections))
             );
         }
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
-    public static List<SelectableFacet> parseHistogram(Histogram histogram, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
+    /**
+     * Parse regular histogram.
+     * 
+     * @param histogram
+     * @param aggField
+     * @param previousSelections
+     * @return 
+     */
+    public static List<SelectableFacet> parseHistogram(Histogram histogram, AggregationField aggField, List<SelectableFacet> previousSelections) {
+        List<SelectableFacet> selectables = new ArrayList<>();
         for (org.elasticsearch.search.aggregations.bucket.histogram.Histogram.Bucket bucket: histogram.getBuckets()) {
-            simpleFacets.add(
-                    new SelectableFacet()
+            selectables.add(
+                new SelectableFacet()
                     .setName(bucket.getKey())
                     .setCount(bucket.getDocCount())
+                    .setSelected(hasSelection(bucket.getKey(), previousSelections))
             );
         }
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
-    public static List<SelectableFacet> parseDateHistogram(DateHistogram dateHistogram, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
+    /**
+     * Parse date histogram,
+     * 
+     * @param dateHistogram
+     * @param aggField
+     * @param previousSelections
+     * @return 
+     */
+    public static List<SelectableFacet> parseDateHistogram(DateHistogram dateHistogram, AggregationField aggField, List<SelectableFacet> previousSelections) {
+        List<SelectableFacet> selectables = new ArrayList<>();
         for (org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram.Bucket bucket: dateHistogram.getBuckets()) {
-            simpleFacets.add(
-                    new SelectableFacet()
+            selectables.add(
+                new SelectableFacet()
                     .setName(bucket.getKey())
                     .setCount(bucket.getDocCount())
+                    .setSelected(hasSelection(bucket.getKey(), previousSelections))
             );
         }
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
-    public static List<SelectableFacet> parseRange(Range range, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
+    /**
+     * Parse range.
+     * 
+     * @param range
+     * @param aggField
+     * @param previousSelections
+     * @return 
+     */
+    public static List<SelectableFacet> parseRange(Range range, AggregationField aggField, List<SelectableFacet> previousSelections) {
+        List<SelectableFacet> selectables = new ArrayList<>();
         for (org.elasticsearch.search.aggregations.bucket.range.Range.Bucket bucket: range.getBuckets()) {
-            simpleFacets.add(
-                    new SelectableFacet()
+            selectables.add(
+                new SelectableFacet()
                     .setName(bucket.getFrom() + "-" + bucket.getTo())
                     .setCount(bucket.getDocCount())
+                    .setSelected(hasSelection(bucket.getFrom() + "-" + bucket.getTo(), previousSelections))
             );
         }
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
-    public static List<SelectableFacet> parseGlobal(Global global, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
-        simpleFacets.add(
-                new SelectableFacet()
+    /**
+     * Parse global.
+     * 
+     * @param global
+     * @param aggField
+     * @param previousSelections
+     * @return 
+     */
+    public static List<SelectableFacet> parseGlobal(Global global, AggregationField aggField, List<SelectableFacet> previousSelections) {
+        List<SelectableFacet> selectables = new ArrayList<>();
+        selectables.add(
+            new SelectableFacet()
                 .setName(global.getName())
                 .setCount(global.getDocCount())
+                .setSelected(hasSelection(global.getName(), previousSelections))
         );
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
+    /**
+     * Parse average.
+     * 
+     * @param avg
+     * @param aggField
+     * @return 
+     */
     public static List<SelectableFacet> parseAvg(Avg avg, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
-        simpleFacets.add(
-                new SelectableFacet()
+        List<SelectableFacet> selectables = new ArrayList<>();
+        selectables.add(
+            new SelectableFacet()
                 .setName(avg.getName())
                 .setValue(avg.getValue())
         );
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
+    /**
+     * Parse cardinality (number of unique terms)
+     * 
+     * @param cardinality
+     * @param aggField
+     * @return 
+     */
     public static List<SelectableFacet> parseCardinality(Cardinality cardinality, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
-        simpleFacets.add(
-                new SelectableFacet()
+        List<SelectableFacet> selectables = new ArrayList<>();
+        selectables.add(
+            new SelectableFacet()
                 .setName(cardinality.getName())
                 .setCount(cardinality.getValue())
         );
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
+    /**
+     * Parse percentiles.
+     * 
+     * @param percentiles
+     * @param aggField
+     * @return 
+     */
     public static List<SelectableFacet> parsePercentiles(Percentiles percentiles, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
+        List<SelectableFacet> selectables = new ArrayList<>();
         for (Percentile percentile: percentiles) {
-            simpleFacets.add(
-                    new SelectableFacet()
+            selectables.add(
+                new SelectableFacet()
                     .setName(Double.toString(percentile.getPercent()))
                     .setValue(percentile.getValue())
             );
         }
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        return selectables;
     }
 
+    /**
+     * Parse stats (count, avg, sum, min, max)
+     * 
+     * @param stats
+     * @param aggField
+     * @return 
+     */
     public static List<SelectableFacet> parseStats(Stats stats, AggregationField aggField) {
-        List<SelectableFacet> simpleFacets = new ArrayList<>();
-        simpleFacets.add(
-                new SelectableFacet()
+        List<SelectableFacet> selectables = new ArrayList<>();
+        selectables.add(
+            new SelectableFacet()
                 .setName(stats.getName())
                 .setCount(stats.getCount())
         );
 
-        return simpleFacets.isEmpty() ? null : simpleFacets;
+        selectables.add(
+            new SelectableFacet()
+                .setName("avg")
+                .setValue(stats.getAvg())
+        );
+
+        selectables.add(
+            new SelectableFacet()
+                .setName("sum")
+                .setValue(stats.getSum())
+        );
+
+        selectables.add(
+            new SelectableFacet()
+                .setName("min")
+                .setValue(stats.getMin())
+        );
+
+        selectables.add(
+            new SelectableFacet()
+                .setName("max")
+                .setValue(stats.getMax())
+        );
+
+        return selectables.isEmpty() ? null : selectables;
+    }
+    
+    /**
+     * Get the selections that have been passed in by the UI.
+     * 
+     * @param field
+     * @param previousRequests
+     * @return 
+     */
+    public static List<SelectableFacet> getPreviousSelections(AggregationField field, List<FacetRequest> previousRequests) {
+        if (previousRequests == null) { return null; }
+        
+        for (FacetRequest request: previousRequests) {
+            if (request.getField() == field) {
+                return request.getSelectables();
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Check to see if this facet was selected by the user.
+     * 
+     * @param facetName
+     * @param selectables
+     * @return 
+     */
+    public static boolean hasSelection(String facetName, List<SelectableFacet> selectables) {
+        if (selectables == null) { return false; }
+        
+        for (SelectableFacet selectable: selectables) {
+            if ((selectable.getName().equals(facetName)) && selectable.isSelected()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Return a list of all of the user selected facets.
+     * 
+     * @param selectables
+     * @return 
+     */
+    public static List<SelectableFacet> getSelections(List<SelectableFacet> selectables) {
+        if (selectables == null) { return null; }
+        
+        List<SelectableFacet> selected = new ArrayList<>();
+        for (SelectableFacet selectable: selectables) {
+            if (selectable.isSelected()) {
+                selected.add(selectable);
+            }
+        }
+        
+        return selected.isEmpty() ? null : selected;
     }
 }
