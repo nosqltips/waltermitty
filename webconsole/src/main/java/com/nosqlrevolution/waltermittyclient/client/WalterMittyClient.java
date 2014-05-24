@@ -5,18 +5,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.logical.shared.HasAttachHandlers;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.*;
 import com.nosqlrevolution.waltermittyclient.model.FacetRequest;
 import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
-import com.nosqlrevolution.waltermittyclient.shared.FieldVerifier;
 
 import java.util.ArrayList;
 
@@ -29,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class WalterMittyClient implements EntryPoint, HasAttachHandlers {
+public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler, FocusHandler, BlurHandler {
     /**
      * The message displayed to the user when the server cannot be reached or
      * returns an error.
@@ -57,6 +51,9 @@ public class WalterMittyClient implements EntryPoint, HasAttachHandlers {
     private Label textToServerLabel;
     private VerticalPanel dialogVPanel;
     private Button closeButton;
+    private TextBox nameField;
+    private Button sendButton;
+//    private Label errorLabel;
 
 
     /**
@@ -90,10 +87,19 @@ public class WalterMittyClient implements EntryPoint, HasAttachHandlers {
         rp.add(p);
 
 
-        final Button sendButton = new Button(messages.sendButton());
-        final TextBox nameField = new TextBox();
+        sendButton = new Button(messages.sendButton());
+        sendButton.addClickHandler(this);
+
+        nameField = new TextBox();
+        nameField.setStyleName("textBoxWaterMark");
         nameField.setText(messages.nameField());
-        final Label errorLabel = new Label();
+
+        nameField.addKeyUpHandler(this);
+        nameField.addFocusHandler(this);
+        nameField.addClickHandler(this);
+        nameField.addBlurHandler(this);
+
+//        errorLabel = new Label();
 
         // We can add style names to widgets
         sendButton.addStyleName("sendButton");
@@ -101,13 +107,9 @@ public class WalterMittyClient implements EntryPoint, HasAttachHandlers {
         HorizontalPanel hp = new HorizontalPanel();
         hp.add(nameField);
         hp.add(sendButton);
-        hp.add(errorLabel);
+//        hp.add(errorLabel);
         hp.setStyleName("westPanelTopPanel");
         westPanel.add(hp);
-
-        // Focus the cursor on the name field when the app loads
-        nameField.setFocus(true);
-        nameField.selectAll();
 
         westPanelContainer.getElement().setId("westPanelVertContainer");
         westPanelContainer.setStyleName("westPanelVertContainer");
@@ -151,114 +153,17 @@ public class WalterMittyClient implements EntryPoint, HasAttachHandlers {
             }
         });
 
-        // Create a handler for the sendButton and nameField
-        class MyHandler implements ClickHandler, KeyUpHandler {
-            /**
-             * Fired when the user clicks on the sendButton.
-             */
-            public void onClick(ClickEvent event) {
-                sendNameToServer();
-            }
-
-            /**
-             * Fired when the user types in the nameField.
-             */
-            public void onKeyUp(KeyUpEvent event) {
-                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-                    sendNameToServer();
-                }
-            }
-
-            /**
-             * Send the name from the nameField to the server and wait for a response.
-             */
-            private void sendNameToServer() {
-                String textToServer = nameField.getText();
-                if (textToServer.equalsIgnoreCase(messages.nameField()))
-                {
-                    textToServer = "";
-                }
-//                if (!FieldVerifier.isValidName(textToServer)) {
-//                    errorLabel.setText("Please enter a member id");
-//                    return;
-//                }
-
-                // Then, we send the input to the server.
-                //sendButton.setEnabled(false);
-                textToServerLabel.setText(textToServer);
-                serverResponseLabel.setText("");
-                centerPanel.showPleaseWait(true);
-                walterMittyService.get(textToServer,new AsyncCallback<SearchQuery>() {
-
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        //dialogBox.setWidget(dialogVPanel);
-                        // Show the RPC error message to the user
-                        centerPanel.showPleaseWait(false);
-                        facetContainer.clear();
-
-                        dialogBox.setText("Remote Procedure Call - Failure");
-                        serverResponseLabel.addStyleName("serverResponseLabelError");
-                        serverResponseLabel.setHTML(SERVER_ERROR);
-                        dialogBox.center();
-                        closeButton.setFocus(true);
-                    }
-
-                    @Override
-                    public void onSuccess(SearchQuery searchQuery)
-                    {
-                        if (searchQuery == null)
-                        {
-                            centerPanel.showPleaseWait(false);
-
-                            dialogBox.setText("Remote Procedure Call - Failure");
-                            serverResponseLabel.addStyleName("serverResponseLabelError");
-                            serverResponseLabel.setHTML(SERVER_ERROR);
-                            dialogBox.center();
-                            closeButton.setFocus(true);
-
-                            return;
-                        }
-
-                        WalterMittyClient.this.searchQuery = searchQuery;
-                        facetContainer.clear();
-
-                        for (FacetRequest facetRequest : searchQuery.getFacets()) {
-                            DisclosurePanel disclosurePanel = new DisclosurePanel(facetRequest.getField().getDisplay());
-                            disclosurePanel.add(new FacetPanel(facetRequest, postCmd));
-                            disclosurePanel.setOpen(true);
-                            facetContainer.add(disclosurePanel);
-
-                            disclosurePanelList.add(disclosurePanel);
-                        }
-                        // Update center panel
-                        southPanel.update(searchQuery);
-
-                        centerPanel.update(searchQuery.getResults());
-                        centerPanel.showPleaseWait(false);
-                    }
-                });
-            }
-        }
-
         // Add a handler to send the name to the server
-        final MyHandler handler = new MyHandler();
-        sendButton.addClickHandler(handler);
-        nameField.addKeyUpHandler(handler);
-
-        //fix me - verify scheduleDeferred (below) works in place of DeferredCommand
-//        DeferredCommand.addCommand(new Command() {
-//            public void execute() {
-//                handler.sendNameToServer();
-//            }
-//        });
+//        final MyHandler handler = new MyHandler();
+//        sendButton.addClickHandler(this);
+//        nameField.addKeyUpHandler(this);
 
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
         {
             @Override
             public void execute()
             {
-                handler.sendNameToServer();
+                sendNameToServer();
             }
         });
     }
@@ -312,19 +217,124 @@ public class WalterMittyClient implements EntryPoint, HasAttachHandlers {
             disclosurePanel.setOpen(expandAllState);
     }
 
+//    @Override
+//    public HandlerRegistration addAttachHandler(AttachEvent.Handler handler) {
+//        return null;
+//    }
+//
+//    @Override
+//    public boolean isAttached() {
+//        return false;
+//    }
+//
+//    @Override
+//    public void fireEvent(GwtEvent<?> gwtEvent) {
+//
+//    }
+
     @Override
-    public HandlerRegistration addAttachHandler(AttachEvent.Handler handler) {
-        return null;
+    public void onClick(ClickEvent clickEvent) {
+        if (clickEvent.getSource() == sendButton) {
+            sendNameToServer();
+        }
     }
 
     @Override
-    public boolean isAttached() {
-        return false;
+    public void onKeyUp(KeyUpEvent keyUpEvent) {
+        if (keyUpEvent.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            sendNameToServer();
+        }
     }
 
     @Override
-    public void fireEvent(GwtEvent<?> gwtEvent) {
+    public void onFocus(FocusEvent focusEvent) {
+        if (focusEvent.getSource() == nameField) {
+            nameField.removeStyleName("textBoxWaterMark");
 
+            if (nameField.getText().equals(messages.nameField())) {
+                nameField.setText("");
+            }
+        }
+    }
+
+    @Override
+    public void onBlur(BlurEvent blurEvent) {
+        if (blurEvent.getSource() == nameField) {
+            if (nameField.getText().isEmpty()) {
+                nameField.addStyleName("textBoxWaterMark");
+                nameField.setText(messages.nameField());
+            }
+        }
+    }
+
+    /**
+     * Send the name from the nameField to the server and wait for a response.
+     */
+    private void sendNameToServer() {
+        String textToServer = nameField.getText();
+        if (textToServer.equalsIgnoreCase(messages.nameField()))
+        {
+            textToServer = "";
+        }
+//                if (!FieldVerifier.isValidName(textToServer)) {
+//                    errorLabel.setText("Please enter a member id");
+//                    return;
+//                }
+
+        // Then, we send the input to the server.
+        //sendButton.setEnabled(false);
+        textToServerLabel.setText(textToServer);
+        serverResponseLabel.setText("");
+        centerPanel.showPleaseWait(true);
+        walterMittyService.get(textToServer,new AsyncCallback<SearchQuery>() {
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                //dialogBox.setWidget(dialogVPanel);
+                // Show the RPC error message to the user
+                centerPanel.showPleaseWait(false);
+                facetContainer.clear();
+
+                dialogBox.setText("Remote Procedure Call - Failure");
+                serverResponseLabel.addStyleName("serverResponseLabelError");
+                serverResponseLabel.setHTML(SERVER_ERROR);
+                dialogBox.center();
+                closeButton.setFocus(true);
+            }
+
+            @Override
+            public void onSuccess(SearchQuery searchQuery)
+            {
+                if (searchQuery == null)
+                {
+                    centerPanel.showPleaseWait(false);
+
+                    dialogBox.setText("Remote Procedure Call - Failure");
+                    serverResponseLabel.addStyleName("serverResponseLabelError");
+                    serverResponseLabel.setHTML(SERVER_ERROR);
+                    dialogBox.center();
+                    closeButton.setFocus(true);
+
+                    return;
+                }
+
+                WalterMittyClient.this.searchQuery = searchQuery;
+                facetContainer.clear();
+
+                for (FacetRequest facetRequest : searchQuery.getFacets()) {
+                    DisclosurePanel disclosurePanel = new DisclosurePanel(facetRequest.getField().getDisplay());
+                    disclosurePanel.add(new FacetPanel(facetRequest, postCmd));
+                    disclosurePanel.setOpen(true);
+                    facetContainer.add(disclosurePanel);
+
+                    disclosurePanelList.add(disclosurePanel);
+                }
+                // Update center panel
+                southPanel.update(searchQuery);
+
+                centerPanel.update(searchQuery.getResults());
+                centerPanel.showPleaseWait(false);
+            }
+        });
     }
 }
-

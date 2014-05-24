@@ -7,11 +7,11 @@ package com.nosqlrevolution.waltermittyclient.client;
 public interface Messages extends com.google.gwt.i18n.client.Messages {
   
   /**
-   * Translated "Enter member id".
+   * Translated "<member id>".
    * 
-   * @return translated "Enter member id"
+   * @return translated "<member id>"
    */
-  @DefaultMessage("Enter member id")
+  @DefaultMessage("<member id>")
   @Key("nameField")
   String nameField();
 
