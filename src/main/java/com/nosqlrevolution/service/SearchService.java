@@ -84,7 +84,7 @@ public class SearchService implements Serializable {
         
         SearchResponse response = builder.execute().actionGet();
         List<FacetRequest> facets = null;
-        if (response.getFacets() != null) {
+        if (response.getAggregations() != null) {
             facets = AggregationUtil.parseAggregations(response.getAggregations(), sq.getFacets());
         }
         

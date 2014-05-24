@@ -163,7 +163,7 @@ public class AggregationUtil {
                     );
                 }
             } catch (Exception e) {                    
-                logger.log(Level.WARNING, "Could not add aggregation for type {0}", aggregation.getName());
+                logger.log(Level.WARNING, "Could not parse aggregation for type {0}", aggregation.getName());
                 logger.log(Level.SEVERE, null, e);
             }
         }

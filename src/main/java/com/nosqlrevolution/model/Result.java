@@ -1,8 +1,10 @@
 package com.nosqlrevolution.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class Result implements Serializable {
     private String memberId;
     private String state;

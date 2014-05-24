@@ -1,5 +1,6 @@
 package com.nosqlrevolution.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nosqlrevolution.util.DateUtil;
 
@@ -7,6 +8,7 @@ import com.nosqlrevolution.util.DateUtil;
  *
  * @author cbrown
  */
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class SimpleDateHistogramFacet {
     private long time;
     private long count;

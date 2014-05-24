@@ -1,11 +1,13 @@
 package com.nosqlrevolution.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class SearchQuery implements Serializable {    
     private String memberId;
     

@@ -33,10 +33,10 @@ public class ClientService {
                 .put("discovery.zen.ping.multicast.enabled", "false")
                 .build();
         
-//        client = new TransportClient(settings)
-//                .addTransportAddress(new InetSocketTransportAddress("10.1.10.150", 9300));
-        Node node = nodeBuilder().settings(settings).client(true).data(false).node();
-        client = node.client();
+        client = new TransportClient(settings)
+                .addTransportAddress(new InetSocketTransportAddress("10.1.10.150", 9300));
+//        Node node = nodeBuilder().settings(settings).client(true).data(false).node();
+//        client = node.client();
         client.admin().cluster().prepareHealth().setWaitForGreenStatus().execute().actionGet();
     }
 
