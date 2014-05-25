@@ -9,6 +9,10 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.*;
+import com.nosqlrevolution.waltermittyclient.client.charts.BarChartScrollPanel;
+import com.nosqlrevolution.waltermittyclient.client.charts.LineChartScrollPanel;
+import com.nosqlrevolution.waltermittyclient.client.charts.PieChartScrollPanel;
+import com.nosqlrevolution.waltermittyclient.client.charts.ScatterChartScrollPanel;
 import com.nosqlrevolution.waltermittyclient.model.FacetRequest;
 import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 
@@ -18,7 +22,7 @@ import java.util.ArrayList;
  *
  * Entry point classes define <code>onModuleLoad()</code>.
  * 
- * @author cmorgan
+ * @author noSqlOrBust
  */
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -53,6 +57,7 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
     private Button closeButton;
     private TextBox nameField;
     private Button sendButton;
+    private TabLayoutPanel centerTabPanel;
 //    private Label errorLabel;
 
 
@@ -77,8 +82,19 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
         westPanel = new WestPanel();
         p.addWest(westPanel, 20);
 
+        centerTabPanel = new TabLayoutPanel(1.5, Style.Unit.EM);
+        centerTabPanel.addStyleName("mitty-TabLayoutPanelTab");
         centerPanel = new CenterPanel(null, null);
-        p.add(centerPanel);
+        centerTabPanel.add(centerPanel, "Data");
+
+        centerTabPanel.add(new ScatterChartScrollPanel(), "Scatter Chart");
+        centerTabPanel.add(new LineChartScrollPanel(), "Line Chart");
+        centerTabPanel.add(new BarChartScrollPanel(), "Bar Chart");
+        centerTabPanel.add(new PieChartScrollPanel(), "Pie Chart");
+
+        centerTabPanel.selectTab(0);
+
+        p.add(centerTabPanel);
 
         // Attach the LayoutPanel to the RootLayoutPanel. The latter will listen for
         // resize events on the window to ensure that its children are informed of
@@ -152,11 +168,6 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
                 sendButton.setFocus(true);
             }
         });
-
-        // Add a handler to send the name to the server
-//        final MyHandler handler = new MyHandler();
-//        sendButton.addClickHandler(this);
-//        nameField.addKeyUpHandler(this);
 
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
         {

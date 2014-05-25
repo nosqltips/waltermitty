@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  *
- * @author cmorgan
+ * @author noSqlOrBust
  */
 public class WestPanel extends FlowPanel {
     public WestPanel() {

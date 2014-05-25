@@ -12,7 +12,7 @@ import java.awt.*;
 
 /**
  *
- * @author cmorgan
+ * @author noSqlOrBust
  */
 public class SelectablesPanel extends FlowPanel implements ClickHandler
 {

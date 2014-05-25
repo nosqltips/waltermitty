@@ -34,6 +34,16 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+        <groupId>com.google.gwt.google-apis</groupId>
+        <artifactId>gwt-visualization</artifactId>
+        <version>1.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt.google-apis</groupId>
+      <artifactId>gwt-maps</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.7</version>

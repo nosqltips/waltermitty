@@ -7,7 +7,7 @@ import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 /**
  * The client side stub for the RPC service.
  *
- * @author cmorgan
+ * @author noSqlOrBust
  */
 @RemoteServiceRelativePath("greet")
 public interface WalterMittyService extends RemoteService {

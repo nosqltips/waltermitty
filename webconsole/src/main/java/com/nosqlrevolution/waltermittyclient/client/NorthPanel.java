@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.Label;
 
 /**
  *
- * @author cmorgan
+ * @author noSqlOrBust
  */
 public class NorthPanel extends FlowPanel {
 

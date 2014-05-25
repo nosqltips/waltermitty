@@ -8,7 +8,7 @@ import com.nosqlrevolution.waltermittyclient.shared.FieldVerifier;
 /**
  * The server side implementation of the RPC service.
  *
- * @author cmorgan
+ * @author noSqlOrBust
  */
 @SuppressWarnings("serial")
 public class WalterMittyServiceImpl extends RemoteServiceServlet implements

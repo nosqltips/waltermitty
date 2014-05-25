@@ -7,7 +7,7 @@ import com.nosqlrevolution.waltermittyclient.model.SelectableFacet;
 
 /**
  *
- * @author cmorgan
+ * @author noSqlOrBust
  */
 public class FacetPanel extends FlowPanel {
 

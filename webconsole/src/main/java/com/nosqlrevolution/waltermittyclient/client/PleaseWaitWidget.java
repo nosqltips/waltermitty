@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 /**
  *
- * @author cmorgan
+ * @author noSqlOrBust
  */
 public class PleaseWaitWidget extends PopupPanel
 {

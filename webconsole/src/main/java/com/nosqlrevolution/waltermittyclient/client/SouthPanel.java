@@ -6,7 +6,7 @@ import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 
 /**
  *
- * @author cmorgan
+ * @author noSqlOrBust
  */
 public class SouthPanel extends FlowPanel {
 
