@@ -5,15 +5,12 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.RowCountChangeEvent;
-import com.nosqlrevolution.waltermittyclient.model.FacetRequest;
 import com.nosqlrevolution.waltermittyclient.model.Result;
 
 import java.util.ArrayList;
@@ -30,56 +27,35 @@ public class CenterPanel extends FlowPanel
     private ListDataProvider<Result> dataProvider;
     private CellTable<Result> table;
     private PleaseWaitWidget pleaseWaitWidget;
+    private GetRestCmd restGetCmd;
 
 
     public CenterPanel() {
         setStyleName("centerPanel");
     }
 
-    public CenterPanel(FacetRequest facetRequest, Command postCmd)
+    public CenterPanel(GetRestCmd restGetCmd)
     {
+        this.restGetCmd = restGetCmd;
         setStyleName("centerPanel");
 
         // Create a CellTable.
         table = new CellTable<Result>();
         table.setStyleName("centerPanelResultsTable");
 
-//        // Create name column.
-//        TextColumn<Result> nameColumn = new TextColumn<Result>() {
-//            @Override
-//            public String getValue(Result result) {
-//                return result.getMemberId();
-//            }
-//        };
-//
-//        // Make the name column sortable.
-//        nameColumn.setSortable(true);
-
-//        // ClickableTextCell.
-//        table.addColumn(new MyClickableCellText(), "ClickableText", new GetValue<String>() {
-//            @Override
-//            public String getValue(Result contact) {
-//                return "Click " + contact.getMemberId();
-//            }
-//        }, new FieldUpdater<Result, String>() {
-//            @Override
-//            public void update(int index, Result object, String value) {
-//                Window.alert("You clicked " + object.getMemberId());
-//            }
-//        });
-
         Column<Result, String> nameColumn = new Column<Result, String>(new MittyClickableCellText()){
             @Override
             public String getValue(Result obj){
                 return obj.getMemberId();
             }
-
         };
 
         nameColumn.setFieldUpdater(new FieldUpdater<Result, String>(){
             @Override
             public void update(int index, Result obj, String value){
-                Window.alert("You clicked " + obj.getMemberId());
+//                Window.alert("You clicked " + obj.getMemberId());
+                CenterPanel.this.restGetCmd.setMemberId(obj.getMemberId());
+                CenterPanel.this.restGetCmd.execute();
             }
         });
 

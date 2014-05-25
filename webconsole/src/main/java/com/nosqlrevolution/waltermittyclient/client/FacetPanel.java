@@ -1,7 +1,7 @@
 package com.nosqlrevolution.waltermittyclient.client;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.nosqlrevolution.waltermittyclient.model.FacetRequest;
 import com.nosqlrevolution.waltermittyclient.model.SelectableFacet;
 
@@ -11,10 +11,10 @@ import com.nosqlrevolution.waltermittyclient.model.SelectableFacet;
  */
 public class FacetPanel extends FlowPanel {
 
-    private Command postCmd;
+    private PostRestCmd postCmd;
     private FacetRequest facetRequest;
 
-    public FacetPanel(FacetRequest facetRequest, Command postCmd) {
+    public FacetPanel(FacetRequest facetRequest, PostRestCmd postCmd) {
         this.facetRequest = facetRequest;
         this.postCmd = postCmd;
 
@@ -54,7 +54,7 @@ public class FacetPanel extends FlowPanel {
             }
         }
     }
-    public void reInitializeUI(FacetRequest facetRequest, Command postCmd)
+    public void reInitializeUI(FacetRequest facetRequest, PostRestCmd postCmd)
     {
         // set facets field variable
         this.facetRequest = facetRequest;

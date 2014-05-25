@@ -2,13 +2,9 @@ package com.nosqlrevolution.waltermittyclient.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.nosqlrevolution.waltermittyclient.model.SelectableFacet;
-
-import java.awt.*;
 
 /**
  *
@@ -17,10 +13,10 @@ import java.awt.*;
 public class SelectablesPanel extends FlowPanel implements ClickHandler
 {
     private final SelectableFacet selectableFacet;
-    private final Command postCmd;
+    private final PostRestCmd postCmd;
     CheckBox checkbox = new CheckBox();
 
-    public SelectablesPanel(SelectableFacet selectableFacet, Command postCmd) {
+    public SelectablesPanel(SelectableFacet selectableFacet, PostRestCmd postCmd) {
         this.selectableFacet = selectableFacet;
         this.postCmd = postCmd;
 

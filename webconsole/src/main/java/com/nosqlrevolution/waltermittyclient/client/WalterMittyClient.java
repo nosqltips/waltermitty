@@ -5,14 +5,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.*;
-import com.nosqlrevolution.waltermittyclient.client.charts.BarChartScrollPanel;
-import com.nosqlrevolution.waltermittyclient.client.charts.LineChartScrollPanel;
-import com.nosqlrevolution.waltermittyclient.client.charts.PieChartScrollPanel;
-import com.nosqlrevolution.waltermittyclient.client.charts.ScatterChartScrollPanel;
 import com.nosqlrevolution.waltermittyclient.model.FacetRequest;
 import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 
@@ -23,9 +18,6 @@ import java.util.ArrayList;
  * Entry point classes define <code>onModuleLoad()</code>.
  * 
  * @author noSqlOrBust
- */
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler, FocusHandler, BlurHandler {
     /**
@@ -43,7 +35,8 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
     private VerticalPanel facetContainer = new VerticalPanel();
     private ArrayList<DisclosurePanel> disclosurePanelList = new ArrayList<>();
     private boolean expandAllState = true;
-    private Command postCmd = postNewQueryCmd();
+    private GetRestCmd restGetCmd = getRestCmd();
+    private PostRestCmd restPostCmd = postRestCmd();
     private SearchQuery searchQuery;
 
     private WestPanel westPanel;
@@ -84,7 +77,7 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
 
         centerTabPanel = new TabLayoutPanel(1.5, Style.Unit.EM);
         centerTabPanel.addStyleName("mitty-TabLayoutPanelTab");
-        centerPanel = new CenterPanel(null, null);
+        centerPanel = new CenterPanel(restGetCmd);
         centerTabPanel.add(centerPanel, "Data");
 
         centerTabPanel.add(new ScatterChartScrollPanel(), "Scatter Chart");
@@ -174,23 +167,34 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
             @Override
             public void execute()
             {
-                sendNameToServer();
+                doGetRestServiceCall("");
             }
         });
     }
 
-    private Command postNewQueryCmd() {
-        return new Command()
+    public GetRestCmd getRestCmd() {
+        return new GetRestCmd()
         {
             @Override
             public void execute()
             {
-                postNewQuery();
+                doGetRestServiceCall(getMemberId());
             }
         };
     }
 
-    private void postNewQuery() {
+    private PostRestCmd postRestCmd() {
+        return new PostRestCmd()
+        {
+            @Override
+            public void execute()
+            {
+                doPostRestServiceCall();
+            }
+        };
+    }
+
+    private void doPostRestServiceCall() {
         centerPanel.showPleaseWait(true);
         walterMittyService.post(this.searchQuery, new AsyncCallback<SearchQuery>() {
             public void onFailure(Throwable caught) {
@@ -228,32 +232,17 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
             disclosurePanel.setOpen(expandAllState);
     }
 
-//    @Override
-//    public HandlerRegistration addAttachHandler(AttachEvent.Handler handler) {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean isAttached() {
-//        return false;
-//    }
-//
-//    @Override
-//    public void fireEvent(GwtEvent<?> gwtEvent) {
-//
-//    }
-
     @Override
     public void onClick(ClickEvent clickEvent) {
         if (clickEvent.getSource() == sendButton) {
-            sendNameToServer();
+            doGetRestServiceCall(nameField.getText());
         }
     }
 
     @Override
     public void onKeyUp(KeyUpEvent keyUpEvent) {
         if (keyUpEvent.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-            sendNameToServer();
+            doGetRestServiceCall(nameField.getText());
         }
     }
 
@@ -279,24 +268,22 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
     }
 
     /**
-     * Send the name from the nameField to the server and wait for a response.
+     * Send the memberId to the server and wait for a response.
      */
-    private void sendNameToServer() {
-        String textToServer = nameField.getText();
-        if (textToServer.equalsIgnoreCase(messages.nameField()))
+    private void doGetRestServiceCall(final String memberId) {
+        String textToServer = memberId;
+        if (textToServer == null || textToServer.equalsIgnoreCase(messages.nameField()))
         {
             textToServer = "";
         }
-//                if (!FieldVerifier.isValidName(textToServer)) {
-//                    errorLabel.setText("Please enter a member id");
-//                    return;
-//                }
 
         // Then, we send the input to the server.
         //sendButton.setEnabled(false);
         textToServerLabel.setText(textToServer);
         serverResponseLabel.setText("");
         centerPanel.showPleaseWait(true);
+
+        final String finalTextToServer = textToServer;
         walterMittyService.get(textToServer,new AsyncCallback<SearchQuery>() {
 
             @Override
@@ -334,17 +321,30 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
 
                 for (FacetRequest facetRequest : searchQuery.getFacets()) {
                     DisclosurePanel disclosurePanel = new DisclosurePanel(facetRequest.getField().getDisplay());
-                    disclosurePanel.add(new FacetPanel(facetRequest, postCmd));
+                    disclosurePanel.add(new FacetPanel(facetRequest, restPostCmd));
                     disclosurePanel.setOpen(true);
                     facetContainer.add(disclosurePanel);
 
                     disclosurePanelList.add(disclosurePanel);
                 }
                 // Update center panel
-                southPanel.update(searchQuery);
-
                 centerPanel.update(searchQuery.getResults());
                 centerPanel.showPleaseWait(false);
+
+                // Update south/bottom panel
+                southPanel.update(searchQuery);
+
+                // update nameField textbox with current memberId
+                nameField.setText(finalTextToServer);
+
+                if (nameField.getText().isEmpty() || nameField.getText().equals(messages.nameField())) {
+                    nameField.addStyleName("textBoxWaterMark");
+                    nameField.setText(messages.nameField());
+                }
+                else
+                {
+                    nameField.removeStyleName("textBoxWaterMark");
+                }
             }
         });
     }
