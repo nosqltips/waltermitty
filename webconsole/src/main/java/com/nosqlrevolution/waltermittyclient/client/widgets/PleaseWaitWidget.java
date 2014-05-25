@@ -1,4 +1,4 @@
-package com.nosqlrevolution.waltermittyclient.client;
+package com.nosqlrevolution.waltermittyclient.client.widgets;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.resources.client.ClientBundle;

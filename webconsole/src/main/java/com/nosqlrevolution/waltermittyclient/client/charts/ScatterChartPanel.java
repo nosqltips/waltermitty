@@ -1,4 +1,4 @@
-package com.nosqlrevolution.waltermittyclient.client;
+package com.nosqlrevolution.waltermittyclient.client.charts;
 
 //import com.google.gwt.core.client.JsArray;
 

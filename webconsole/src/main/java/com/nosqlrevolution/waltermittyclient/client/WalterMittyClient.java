@@ -8,6 +8,12 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.*;
+import com.nosqlrevolution.waltermittyclient.client.charts.BarChartScrollPanel;
+import com.nosqlrevolution.waltermittyclient.client.charts.LineChartScrollPanel;
+import com.nosqlrevolution.waltermittyclient.client.charts.PieChartScrollPanel;
+import com.nosqlrevolution.waltermittyclient.client.charts.ScatterChartScrollPanel;
+import com.nosqlrevolution.waltermittyclient.client.cmd.GetRestCmd;
+import com.nosqlrevolution.waltermittyclient.client.cmd.PostRestCmd;
 import com.nosqlrevolution.waltermittyclient.model.FacetRequest;
 import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 

@@ -1,4 +1,4 @@
-package com.nosqlrevolution.waltermittyclient.client;
+package com.nosqlrevolution.waltermittyclient.client.charts;
 
 //import com.google.gwt.core.client.JsArray;
 
@@ -16,11 +16,11 @@ import com.google.gwt.visualization.client.visualizations.corechart.*;
 /**
  * Created by noSqlOrBust on 5/24/2014.
  */
-public class PieChartPanel extends Composite {
+public class LineChartPanel extends Composite {
 
     private final FlowPanel panel;
 
-    public PieChartPanel() {
+    public LineChartPanel() {
         panel = new FlowPanel();
         initWidget(panel);
 
@@ -29,30 +29,29 @@ public class PieChartPanel extends Composite {
         // has been loaded.
         Runnable onLoadCallback = new Runnable() {
             public void run() {
+                // Create a Line chart visualization.
+                LineChart line = new LineChart(createTable(), createOptions());
 
-                // Create a pie chart visualization.
-                PieChart pie = new PieChart(createTable(), createOptions());
-
-                pie.addSelectHandler(createSelectHandler(pie));
-                panel.add(pie);
+                line.addSelectHandler(createSelectHandler(line));
+                panel.add(line);
             }
         };
 
         // Load the visualization api, passing the onLoadCallback to be called
         // when loading is done.
-        VisualizationUtils.loadVisualizationApi(onLoadCallback, PieChart.PACKAGE);
+        VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);
     }
 
     private Options createOptions() {
         Options options = Options.create();
-        options.setWidth(800);
-        options.setHeight(480);
+        options.setWidth(400);
+        options.setHeight(240);
 //        options.set3D(true);
-        options.setTitle("Pizza Slices");
+        options.setTitle("My Daily Activities");
         return options;
     }
 
-    private SelectHandler createSelectHandler(final PieChart chart) {
+    private SelectHandler createSelectHandler(final LineChart chart) {
         return new SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
@@ -83,7 +82,7 @@ public class PieChartPanel extends Composite {
                         message += "row " + row + " selected";
                     } else {
                         // unreachable
-                        message += "Pie chart selections should be either row selections or cell selections.";
+                        message += "Line chart selections should be either row selections or cell selections.";
                         message += "  Other visualizations support column selections as well.";
                     }
                 }
@@ -94,30 +93,14 @@ public class PieChartPanel extends Composite {
     }
 
     private AbstractDataTable createTable() {
-//        DataTable data = DataTable.create();
-//        data.addColumn(AbstractDataTable.ColumnType.STRING, "Task");
-//        data.addColumn(AbstractDataTable.ColumnType.NUMBER, "Hours per Day");
-//        data.addRows(2);
-//        data.setValue(0, 0, "Work");
-//        data.setValue(0, 1, 14);
-//        data.setValue(1, 0, "Sleep");
-//        data.setValue(1, 1, 10);
-//        return data;
-
         DataTable data = DataTable.create();
-        data.addColumn(AbstractDataTable.ColumnType.STRING, "Topping");
-        data.addColumn(AbstractDataTable.ColumnType.NUMBER, "Slices");
-        data.addRows(5);
-        data.setValue(0, 0, "Mushrooms");
-        data.setValue(0, 1, 3);
-        data.setValue(1, 0, "Onions");
-        data.setValue(1, 1, 1);
-        data.setValue(2, 0, "Olives");
-        data.setValue(2, 1, 1);
-        data.setValue(3, 0, "Zucchini");
-        data.setValue(3, 1, 1);
-        data.setValue(4, 0, "Pepperoni");
-        data.setValue(4, 1, 2);
+        data.addColumn(AbstractDataTable.ColumnType.STRING, "Task");
+        data.addColumn(AbstractDataTable.ColumnType.NUMBER, "Hours per Day");
+        data.addRows(2);
+        data.setValue(0, 0, "Work");
+        data.setValue(0, 1, 14);
+        data.setValue(1, 0, "Sleep");
+        data.setValue(1, 1, 10);
         return data;
     }
 }

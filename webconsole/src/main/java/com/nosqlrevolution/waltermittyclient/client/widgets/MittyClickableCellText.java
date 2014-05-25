@@ -1,4 +1,4 @@
-package com.nosqlrevolution.waltermittyclient.client;
+package com.nosqlrevolution.waltermittyclient.client.widgets;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ClickableTextCell;
