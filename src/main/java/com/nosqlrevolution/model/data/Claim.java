@@ -2,7 +2,6 @@ package com.nosqlrevolution.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,8 +17,8 @@ public class Claim {
     private Timestamp dateProcessed;
     private Timestamp serviceStart;
     private Timestamp serviceEnd;
-    private BigDecimal repricedAmount;
-    private BigDecimal patientResponsibilityAmount;
+    private Float repricedAmount;
+    private Float patientResponsibilityAmount;
 
     private ArrayList<ClaimDetail> claimDetails;
     private List<String> cptCodesAll = new ArrayList<>();
@@ -106,22 +105,22 @@ public class Claim {
     }
 
     @JsonProperty("repricedAmount")
-    public BigDecimal getRepricedAmount() {
+    public Float getRepricedAmount() {
         return repricedAmount;
     }
 
     @JsonProperty("repricedAmount")
-    public void setRepricedAmount(BigDecimal repricedAmount) {
+    public void setRepricedAmount(Float repricedAmount) {
         this.repricedAmount = repricedAmount;
     }
 
     @JsonProperty("patientResponsibilityAmount")
-    public BigDecimal getPatientResponsibilityAmount() {
+    public Float getPatientResponsibilityAmount() {
         return patientResponsibilityAmount;
     }
 
     @JsonProperty("patientResponsibilityAmount")
-    public void setPatientResponsibilityAmount(BigDecimal patientResponsibilityAmount) {
+    public void setPatientResponsibilityAmount(Float patientResponsibilityAmount) {
         this.patientResponsibilityAmount = patientResponsibilityAmount;
     }
 

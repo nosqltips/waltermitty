@@ -37,6 +37,7 @@ public class AggregationService implements Serializable {
             facetRequests.add(new FacetRequest(AggregationField.TOTAL_PAYMENTS));
             facetRequests.add(new FacetRequest(AggregationField.CPT_CODES_ALL, 20));
             facetRequests.add(new FacetRequest(AggregationField.CPT_CODES_UNIQUE, 20));
+            facetRequests.add(new FacetRequest(AggregationField.CLAIM_TYPE));
 
             return facetRequests;
     }

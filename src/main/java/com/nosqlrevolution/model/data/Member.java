@@ -2,7 +2,6 @@ package com.nosqlrevolution.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +14,8 @@ public class Member {
     private String zip;
     private String gender;
     private String birthYear;
+    private String birthDecade;
+    private String age;
     private Timestamp hsaEffectiveDate;
 
     private int numberOfDependents;
@@ -24,19 +25,22 @@ public class Member {
     private int numberOfEmployeeContributions;
     private int numberOfEmployerContributions;
     private int numberofPayments;
-    private BigDecimal totalEmployeeContributions;  // total dollar amount of employee contributions
-    private BigDecimal totalEmployerContributions;  // total dollar amount of EMPLOYER contributions
-    private BigDecimal totalPayments;  // total dollar amount of payments
-    private BigDecimal totalContributionsAndPayments;
+    private Float totalEmployeeContributions;  // total dollar amount of employee contributions
+    private Float totalEmployerContributions;  // total dollar amount of EMPLOYER contributions
+    private Float totalPayments;  // total dollar amount of payments
+    private Float totalContributionsAndPayments;
     private ArrayList<ContributionsAndPayments> contributionsAndPayments;
+    private ArrayList<ContributionsAndPayments> memberContributions;
+    private ArrayList<ContributionsAndPayments> memberPayments;
+    private ArrayList<ContributionsAndPayments> companyContributions;
 
     private int numberOfBalances;
-    private BigDecimal totalOfBalances;
+    private Float totalOfBalances;
     private ArrayList<Balance> balances;
 
     private int numberOfClaims;
-    private BigDecimal totalClaimsRepricedAmount;
-    private BigDecimal totalClaimsPatientResponsibilityAmount;
+    private Float totalClaimsRepricedAmount;
+    private Float totalClaimsPatientResponsibilityAmount;
     private ArrayList<Claim> claims;
 
     private List<String> cptCodesAll = new ArrayList<>();
@@ -92,6 +96,26 @@ public class Member {
         this.birthYear = birthYear;
     }
 
+    @JsonProperty("birthDecade")
+    public String getBirthDecade() {
+        return birthDecade;
+    }
+
+    @JsonProperty("birthDecade")
+    public void setBirthDecade(String birthDecade) {
+        this.birthDecade = birthDecade;
+    }
+
+    @JsonProperty("age")
+    public String getAge() {
+        return age;
+    }
+
+    @JsonProperty("age")
+    public void setAge(String age) {
+        this.age = age;
+    }
+
     @JsonProperty("hsaEffectiveDate")
     public Timestamp getHsaEffectiveDate() {
         return hsaEffectiveDate;
@@ -133,6 +157,36 @@ public class Member {
 
     }
 
+    @JsonProperty("memberContributions")
+    public ArrayList<ContributionsAndPayments> getMemberContributions() {
+        return memberContributions;
+    }
+
+    @JsonProperty("memberContributions")
+    public void setMemberContributions(ArrayList<ContributionsAndPayments> memberContributions) {
+        this.memberContributions = memberContributions;
+    }
+
+    @JsonProperty("memberPayments")
+    public ArrayList<ContributionsAndPayments> getMemberPayments() {
+        return memberPayments;
+    }
+
+    @JsonProperty("memberPayments")
+    public void setMemberPayments(ArrayList<ContributionsAndPayments> memberPayments) {
+        this.memberPayments = memberPayments;
+    }
+
+    @JsonProperty("companyContributions")
+    public ArrayList<ContributionsAndPayments> getCompanyContributions() {
+        return companyContributions;
+    }
+
+    @JsonProperty("companyContributions")
+    public void setCompanyContributions(ArrayList<ContributionsAndPayments> companyContributions) {
+        this.companyContributions = companyContributions;
+    }
+
     @JsonProperty("balances")
     public ArrayList<Balance> getBalances() {
         return balances;
@@ -153,12 +207,12 @@ public class Member {
         {
             setNumberOfBalances(balances.size());
 
-            BigDecimal totalOfBalances = new BigDecimal(0);
+            Float totalOfBalances = new Float(0);
             for (Balance balance : balances)
             {
                 if (balance.getCachedBalance() != null)
                 {
-                    totalOfBalances = totalOfBalances.add(balance.getCachedBalance());
+                    totalOfBalances = totalOfBalances += balance.getCachedBalance();
                 }
             }
 
@@ -187,18 +241,18 @@ public class Member {
         {
             setNumberOfClaims(claims.size());
 
-            BigDecimal totalClaimsRepricedAmount = new BigDecimal(0);
-            BigDecimal totalClaimsPatientResponsibilityAmount = new BigDecimal(0);
+            Float totalClaimsRepricedAmount = new Float(0);
+            Float totalClaimsPatientResponsibilityAmount = new Float(0);
             for (Claim claim : claims)
             {
                 if (claim.getRepricedAmount() != null)
                 {
-                    totalClaimsRepricedAmount = totalClaimsRepricedAmount.add(claim.getRepricedAmount());
+                    totalClaimsRepricedAmount = totalClaimsRepricedAmount += claim.getRepricedAmount();
                 }
 
                 if (claim.getPatientResponsibilityAmount() != null)
                 {
-                    totalClaimsPatientResponsibilityAmount = totalClaimsPatientResponsibilityAmount.add(claim.getPatientResponsibilityAmount());
+                    totalClaimsPatientResponsibilityAmount = totalClaimsPatientResponsibilityAmount+= claim.getPatientResponsibilityAmount();
                 }
 
             }
@@ -268,42 +322,42 @@ public class Member {
     }
 
     @JsonProperty("totalContributionsAndPayments")
-    public BigDecimal getTotalContributionsAndPayments() {
+    public Float getTotalContributionsAndPayments() {
         return totalContributionsAndPayments;
     }
 
     @JsonProperty("totalContributionsAndPayments")
-    public void setTotalContributionsAndPayments(BigDecimal totalContributionsAndPayments) {
+    public void setTotalContributionsAndPayments(Float totalContributionsAndPayments) {
         this.totalContributionsAndPayments = totalContributionsAndPayments;
     }
 
     @JsonProperty("totalOfBalances")
-    public BigDecimal getTotalOfBalances() {
+    public Float getTotalOfBalances() {
         return totalOfBalances;
     }
 
     @JsonProperty("totalOfBalances")
-    public void setTotalOfBalances(BigDecimal totalOfBalances) {
+    public void setTotalOfBalances(Float totalOfBalances) {
         this.totalOfBalances = totalOfBalances;
     }
 
     @JsonProperty("totalClaimsRepricedAmount")
-    public BigDecimal getTotalClaimsRepricedAmount() {
+    public Float getTotalClaimsRepricedAmount() {
         return totalClaimsRepricedAmount;
     }
 
     @JsonProperty("totalClaimsRepricedAmount")
-    public void setTotalClaimsRepricedAmount(BigDecimal totalClaimsRepricedAmount) {
+    public void setTotalClaimsRepricedAmount(Float totalClaimsRepricedAmount) {
         this.totalClaimsRepricedAmount = totalClaimsRepricedAmount;
     }
 
     @JsonProperty("totalClaimsPatientResponsibilityAmount")
-    public BigDecimal getTotalClaimsPatientResponsibilityAmount() {
+    public Float getTotalClaimsPatientResponsibilityAmount() {
         return totalClaimsPatientResponsibilityAmount;
     }
 
     @JsonProperty("totalClaimsPatientResponsibilityAmount")
-    public void setTotalClaimsPatientResponsibilityAmount(BigDecimal totalClaimsPatientResponsibilityAmount) {
+    public void setTotalClaimsPatientResponsibilityAmount(Float totalClaimsPatientResponsibilityAmount) {
         this.totalClaimsPatientResponsibilityAmount = totalClaimsPatientResponsibilityAmount;
     }
 
@@ -317,10 +371,10 @@ public class Member {
             int numEmployeeContributions = 0;
             int numEmployerContributions = 0;
             int numPayments = 0;
-            BigDecimal totalContributionsAndPayments = new BigDecimal(0);
-            BigDecimal totalEmployeeContributions = new BigDecimal(0);
-            BigDecimal totalEmployerContributions = new BigDecimal(0);
-            BigDecimal totalPayments = new BigDecimal(0);
+            Float totalContributionsAndPayments = 0.0F;
+            Float totalEmployeeContributions = 0.0F;
+            Float totalEmployerContributions = 0.0F;
+            Float totalPayments = 0.0F;
 
             for (ContributionsAndPayments cp : contributionsAndPayments)
             {
@@ -328,7 +382,7 @@ public class Member {
                 {
                     numPayments++;
                     if (cp.getAmount() != null) {
-                        totalPayments = totalPayments.add(cp.getAmount());
+                        totalPayments = totalPayments += cp.getAmount();
                     }
                 }
                 else if (cp.getCategory().equalsIgnoreCase("ContEmployee"))
@@ -336,7 +390,7 @@ public class Member {
                     numEmployeeContributions++;
 
                     if (cp.getAmount() != null) {
-                        totalEmployeeContributions = totalEmployeeContributions.add(cp.getAmount());
+                        totalEmployeeContributions = totalEmployeeContributions += cp.getAmount();
                     }
                 }
                 else if (cp.getCategory().equalsIgnoreCase("ContEmployer"))
@@ -344,12 +398,12 @@ public class Member {
                     numEmployerContributions++;
 
                     if (cp.getAmount() != null) {
-                        totalEmployerContributions = totalEmployerContributions.add(cp.getAmount());
+                        totalEmployerContributions = totalEmployerContributions += cp.getAmount();
                     }
                 }
 
                 if (cp.getAmount() != null) {
-                    totalContributionsAndPayments = totalContributionsAndPayments.add(cp.getAmount());
+                    totalContributionsAndPayments = totalContributionsAndPayments += cp.getAmount();
                 }
             }
 
@@ -366,32 +420,32 @@ public class Member {
     }
 
     @JsonProperty("totalEmployeeContributions")
-    public BigDecimal getTotalEmployeeContributions() {
+    public Float getTotalEmployeeContributions() {
         return totalEmployeeContributions;
     }
 
     @JsonProperty("totalEmployeeContributions")
-    public void setTotalEmployeeContributions(BigDecimal totalEmployeeContributions) {
+    public void setTotalEmployeeContributions(Float totalEmployeeContributions) {
         this.totalEmployeeContributions = totalEmployeeContributions;
     }
 
     @JsonProperty("totalEmployerContributions")
-    public BigDecimal getTotalEmployerContributions() {
+    public Float getTotalEmployerContributions() {
         return totalEmployerContributions;
     }
 
     @JsonProperty("totalEmployerContributions")
-    public void setTotalEmployerContributions(BigDecimal totalEmployerContributions) {
+    public void setTotalEmployerContributions(Float totalEmployerContributions) {
         this.totalEmployerContributions = totalEmployerContributions;
     }
 
     @JsonProperty("totalPayments")
-    public BigDecimal getTotalPayments() {
+    public Float getTotalPayments() {
         return totalPayments;
     }
 
     @JsonProperty("totalPayments")
-    public void setTotalPayments(BigDecimal totalPayments) {
+    public void setTotalPayments(Float totalPayments) {
         this.totalPayments = totalPayments;
     }
 

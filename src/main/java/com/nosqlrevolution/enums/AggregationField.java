@@ -24,7 +24,9 @@ public enum AggregationField {
     TOTAL_CLAIMS("totalClaimsRepricedAmount", "Total Claims"),
     TOTAL_CLAIMS_PATIENT("totalClaimsPatientResponsibilityAmount", "Total Claims Patient"),
     CPT_CODES_ALL("cptCodesAll", "CPT Codes All"),
-    CPT_CODES_UNIQUE("cptCodesUnique", "CPT Codes Unique");
+    CPT_CODES_UNIQUE("cptCodesUnique", "CPT Codes Unique"),
+    
+    CLAIM_TYPE("contributionsAndPayments.category", "Claim Type");
     
     private final String name;
     private final String display;

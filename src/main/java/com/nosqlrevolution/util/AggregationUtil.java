@@ -4,6 +4,7 @@ import com.nosqlrevolution.enums.AggregationField;
 import com.nosqlrevolution.model.FacetRequest;
 import com.nosqlrevolution.model.SelectableFacet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,7 +109,7 @@ public class AggregationUtil {
             return null;
         }
 
-        List<AbstractAggregationBuilder> facetBuilders = new ArrayList<>();
+        List<AbstractAggregationBuilder> aggregationBuilders = new ArrayList<>();
         for (FacetRequest request : facetRequests) {
             switch (request.getField()) {
                 case BIRTH_YEAR:
@@ -131,12 +132,13 @@ public class AggregationUtil {
                 case TOTAL_PAYMENTS:
                 case CPT_CODES_ALL:
                 case CPT_CODES_UNIQUE:
-                    facetBuilders.add(getTerms(request.getField(), request.getSize()));
+                case CLAIM_TYPE:
+                    aggregationBuilders.add(getTerms(request.getField(), request.getSize()));
                     break;
             }
         }
 
-        return facetBuilders;
+        return aggregationBuilders;
     }
 
     /**
@@ -492,5 +494,44 @@ public class AggregationUtil {
         }
         
         return selected.isEmpty() ? null : selected;
+    }
+    
+    /**
+     * Easy way to create a new facet request.
+     * 
+     * @param aggField
+     * @param value
+     * @return 
+     */
+    public static FacetRequest getFacetRequest(AggregationField aggField, Object value) {
+        List<Object> values = new ArrayList<>();
+        values.add(value);
+
+        return getFacetRequest(aggField, values);
+    }
+
+    /**
+     * Easy way to create a new facet request.
+     * 
+     * @param aggField
+     * @param values
+     * @return 
+     */
+    public static FacetRequest getFacetRequest(AggregationField aggField, Collection<Object> values) {
+        List<SelectableFacet> selectables = new ArrayList<>();
+        for (Object value: values) {
+            if (value != null) {
+                selectables.add(new SelectableFacet()
+                        .setName(value.toString())
+                        .setSelected(Boolean.TRUE)
+                );
+            }
+        }
+        
+        FacetRequest request = new FacetRequest()
+                .setField(aggField)
+                .setSelectables(selectables);
+        
+        return request;
     }
 }
