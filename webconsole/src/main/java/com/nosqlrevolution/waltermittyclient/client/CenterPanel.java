@@ -128,13 +128,13 @@ public class CenterPanel extends FlowPanel
 
         // Add the columns.
         table.addColumn(nameColumn, "Member Id");
-        table.addColumn(stateColumn, "State");
-        table.addColumn(zipColumn, "ZIP");
         table.addColumn(birthYearColumn, "Birth Year");
         table.addColumn(genderColumn, "Gender");
         table.addColumn(numDependentsColumn, "# Dependents");
         table.addColumn(numPaymentsColumn, "# Payments");
         table.addColumn(numClaimsColumn, "# Claims");
+        table.addColumn(stateColumn, "State");
+        table.addColumn(zipColumn, "ZIP");
         table.addColumn(scoreColumn, "Score");
 
         // Create a data provider.

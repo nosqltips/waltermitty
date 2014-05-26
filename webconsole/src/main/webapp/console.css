@@ -234,7 +234,8 @@ h1 {
 }
 
 .mitty-TabLayoutPanelTab {
-    margin-top: 3px !important;
+    background-color: #EDEDED;
+    border-top: 5px solid #EDEDED;
 }
 
 .mitty-TabLayoutPanelTab .gwt-TabLayoutPanelTab {

@@ -90,6 +90,7 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
         centerTabPanel.add(new LineChartScrollPanel(), "Line Chart");
         centerTabPanel.add(new BarChartScrollPanel(), "Bar Chart");
         centerTabPanel.add(new PieChartScrollPanel(), "Pie Chart");
+//        centerTabPanel.add(new JsonChartPanel(), "Json Query Results");
 
         centerTabPanel.selectTab(0);
 
@@ -108,6 +109,7 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
         nameField = new TextBox();
         nameField.setStyleName("textBoxWaterMark");
         nameField.setText(messages.nameField());
+        nameField.setTitle("Enter member id");
 
         nameField.addKeyUpHandler(this);
         nameField.addFocusHandler(this);
@@ -124,7 +126,7 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
         hp.add(sendButton);
 //        hp.add(errorLabel);
         hp.setStyleName("westPanelTopPanel");
-        westPanel.add(hp);
+//        westPanel.add(hp);
 
         westPanelContainer.getElement().setId("westPanelVertContainer");
         westPanelContainer.setStyleName("westPanelVertContainer");
@@ -137,6 +139,8 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
         facetScrollContainer.add(facetContainer);
         facetScrollContainer.setStyleName("facetScrollContainer");
         westPanel.add(westPanelContainer);
+
+        westPanel.add(hp);
 
 
         // Create the popup dialog box
