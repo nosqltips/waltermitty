@@ -22,20 +22,6 @@ public class FacetPanel extends FlowPanel {
         setStyleName("facetPanel");
 
         buildUI();
-//        if (facetRequest.getSelectables() != null && facetRequest.getSelectables().size() > 0)
-//        {
-//            VerticalPanel verticalPanel = new VerticalPanel();
-//            verticalPanel.setStyleName("selectablePanelInnerVerticalPanel");
-//
-//            add(verticalPanel);
-//
-//            for (SelectableFacet selectableFacet : facetRequest.getSelectables())
-//            {
-//                // Add selectables
-//                SelectablesPanel selectablesPanel = new SelectablesPanel(selectableFacet, postCmd);
-//                verticalPanel.add(selectablesPanel);
-//            }
-//        }
     }
 
     private void buildUI()

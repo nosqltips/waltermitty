@@ -86,6 +86,14 @@ public class CenterPanel extends FlowPanel
             }
         };
 
+        // Create gender column.
+        TextColumn<Result> genderColumn = new TextColumn<Result>() {
+            @Override
+            public String getValue(Result result) {
+                return result.getGender();
+            }
+        };
+
         // Create numDependents column.
         TextColumn<Result> numDependentsColumn = new TextColumn<Result>() {
             @Override
@@ -123,6 +131,7 @@ public class CenterPanel extends FlowPanel
         table.addColumn(stateColumn, "State");
         table.addColumn(zipColumn, "ZIP");
         table.addColumn(birthYearColumn, "Birth Year");
+        table.addColumn(genderColumn, "Gender");
         table.addColumn(numDependentsColumn, "# Dependents");
         table.addColumn(numPaymentsColumn, "# Payments");
         table.addColumn(numClaimsColumn, "# Claims");
