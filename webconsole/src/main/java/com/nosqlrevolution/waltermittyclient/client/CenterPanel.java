@@ -11,10 +11,10 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.RowCountChangeEvent;
+import com.nosqlrevolution.model.Result;
 import com.nosqlrevolution.waltermittyclient.client.cmd.GetRestCmd;
 import com.nosqlrevolution.waltermittyclient.client.widgets.MittyClickableCellText;
 import com.nosqlrevolution.waltermittyclient.client.widgets.PleaseWaitWidget;
-import com.nosqlrevolution.waltermittyclient.model.Result;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -98,7 +98,7 @@ public class CenterPanel extends FlowPanel
         TextColumn<Result> numDependentsColumn = new TextColumn<Result>() {
             @Override
             public String getValue(Result result) {
-                return result.getNumDependents();
+                return result.getNumDependents().toString();
             }
         };
 
@@ -106,7 +106,7 @@ public class CenterPanel extends FlowPanel
         TextColumn<Result> numPaymentsColumn = new TextColumn<Result>() {
             @Override
             public String getValue(Result result) {
-                return result.getNumPayments();
+                return result.getNumPayments().toString();
             }
         };
 
@@ -114,7 +114,7 @@ public class CenterPanel extends FlowPanel
         TextColumn<Result> numClaimsColumn = new TextColumn<Result>() {
             @Override
             public String getValue(Result result) {
-                return result.getNumClaims();
+                return result.getNumClaims().toString();
             }
         };
 

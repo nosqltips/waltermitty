@@ -1,9 +1,8 @@
 package com.nosqlrevolution.waltermittyclient.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nosqlrevolution.model.SearchQuery;
 import com.nosqlrevolution.waltermittyclient.client.WalterMittyService;
-import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
-import com.nosqlrevolution.waltermittyclient.shared.FieldVerifier;
 
 /**
  * The server side implementation of the RPC service.
