@@ -14,8 +14,8 @@ import com.nosqlrevolution.waltermittyclient.client.charts.PieChartScrollPanel;
 import com.nosqlrevolution.waltermittyclient.client.charts.ScatterChartScrollPanel;
 import com.nosqlrevolution.waltermittyclient.client.cmd.GetRestCmd;
 import com.nosqlrevolution.waltermittyclient.client.cmd.PostRestCmd;
-import com.nosqlrevolution.waltermittyclient.client.model.FacetRequest;
-import com.nosqlrevolution.waltermittyclient.client.model.SearchQuery;
+import com.nosqlrevolution.waltermittyclient.model.FacetRequest;
+import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 
 import java.util.ArrayList;
 

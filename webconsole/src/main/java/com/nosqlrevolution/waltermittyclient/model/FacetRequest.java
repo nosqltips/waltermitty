@@ -1,10 +1,8 @@
-package com.nosqlrevolution.waltermittyclient.client.model;
+package com.nosqlrevolution.waltermittyclient.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nosqlrevolution.waltermittyclient.client.enums.AggregationField;
-import com.nosqlrevolution.waltermittyclient.client.model.*;
+import com.nosqlrevolution.waltermittyclient.enums.AggregationField;
 
 import java.io.Serializable;
 import java.util.List;
@@ -44,11 +42,11 @@ public class FacetRequest implements Serializable {
         return this;
     }
 
-    @JsonIgnore
-    public FacetRequest setField(String fieldName) {
-        this.field = AggregationField.valueOf(fieldName);
-        return this;
-    }
+//    @JsonIgnore
+//    public FacetRequest setField(String fieldName) {
+//        this.field = AggregationField.valueOf(fieldName);
+//        return this;
+//    }
 
     @JsonProperty("size")
     public int getSize() {

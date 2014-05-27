@@ -1,7 +1,7 @@
 package com.nosqlrevolution.waltermittyclient.server;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
-import com.nosqlrevolution.waltermittyclient.client.model.SearchQuery;
+import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;

@@ -1,4 +1,4 @@
-package com.nosqlrevolution.waltermittyclient.client.model.data;
+package com.nosqlrevolution.waltermittyclient.model.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

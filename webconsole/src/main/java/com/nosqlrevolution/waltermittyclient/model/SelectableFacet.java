@@ -1,14 +1,15 @@
-package com.nosqlrevolution.waltermittyclient.client.model;
+package com.nosqlrevolution.waltermittyclient.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 /**
  *
  * @author cbrown
  */
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
-public class SelectableFacet implements Comparable<SelectableFacet> {
+public class SelectableFacet implements Comparable<SelectableFacet>, Serializable {
     private String name;
     private Long count;
     private Double value;

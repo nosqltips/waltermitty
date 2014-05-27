@@ -2,8 +2,8 @@ package com.nosqlrevolution.waltermittyclient.client;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.nosqlrevolution.waltermittyclient.client.model.FacetRequest;
-import com.nosqlrevolution.waltermittyclient.client.model.SelectableFacet;
+import com.nosqlrevolution.waltermittyclient.model.FacetRequest;
+import com.nosqlrevolution.waltermittyclient.model.SelectableFacet;
 import com.nosqlrevolution.waltermittyclient.client.cmd.PostRestCmd;
 
 /**

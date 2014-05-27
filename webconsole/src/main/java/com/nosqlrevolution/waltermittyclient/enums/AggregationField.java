@@ -1,4 +1,4 @@
-package com.nosqlrevolution.waltermittyclient.client.enums;
+package com.nosqlrevolution.waltermittyclient.enums;
 
 /**
  *

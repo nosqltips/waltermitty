@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.RowCountChangeEvent;
-import com.nosqlrevolution.waltermittyclient.client.model.Result;
+import com.nosqlrevolution.waltermittyclient.model.Result;
 import com.nosqlrevolution.waltermittyclient.client.cmd.GetRestCmd;
 import com.nosqlrevolution.waltermittyclient.client.widgets.MittyClickableCellText;
 import com.nosqlrevolution.waltermittyclient.client.widgets.PleaseWaitWidget;
