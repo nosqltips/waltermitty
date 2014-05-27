@@ -65,8 +65,8 @@ public class MoreLikeThisService implements Serializable {
             sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.NUM_EMPOYER_CONTRIBUTIONS, member.getNumberOfEmployerContributions()));
             sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.NUM_PAYMENTS, member.getNumberofPayments()));
             sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_BALANCES, member.getTotalOfBalances()));
-            sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_CLAIMS, member.getTotalClaimsRepricedAmount()));
-            sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_CLAIMS_PATIENT, member.getTotalClaimsPatientResponsibilityAmount()));
+//            sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_CLAIMS, member.getTotalClaimsRepricedAmount()));
+//            sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_CLAIMS_PATIENT, member.getTotalClaimsPatientResponsibilityAmount()));
             sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_CONTRIBUTIONS, member.getTotalContributionsAndPayments()));
             sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_EMPLOYEE_CONTRIBUTIONS, member.getTotalEmployeeContributions()));
             sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_EMPLOYER_CONTRIBUTIONS, member.getTotalEmployerContributions()));

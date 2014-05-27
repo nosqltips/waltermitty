@@ -40,7 +40,7 @@ public class SearchService implements Serializable {
             sq.setPageFrom(0);
         }
         if (sq.getPageSize() == null || sq.getPageSize() < 1) {
-            sq.setPageSize(20);
+            sq.setPageSize(50);
         }
 
         List<BuilderModel> builders = QueryUtil.addAllSelections(new ArrayList<BuilderModel>(), sq.getFacets(), BooleanType.MUST);
@@ -56,7 +56,7 @@ public class SearchService implements Serializable {
         if (sq.getMemberId() == null && builders == null) {
             qb = QueryUtil.getMatchAllQuery();
             sq.setPageFrom(0);
-            sq.setPageSize(0);
+            sq.setPageSize(50);
         } else if (sq.getMemberId() != null && builders == null) {
             qb = QueryUtil.getTermBuilder(SearchField.MEMBER_ID.getName(), sq.getMemberId());
         } else {
