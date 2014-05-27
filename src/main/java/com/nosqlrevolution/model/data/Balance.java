@@ -1,11 +1,10 @@
 package com.nosqlrevolution.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 
 public class Balance {
     private int newMemberID;
-    private BigDecimal cachedBalance;
+    private Float cachedBalance;
 
     @JsonProperty("newMemberID")
     public int getNewMemberID() {
@@ -18,12 +17,12 @@ public class Balance {
     }
 
     @JsonProperty("cachedBalance")
-    public BigDecimal getCachedBalance() {
+    public Float getCachedBalance() {
         return cachedBalance;
     }
 
     @JsonProperty("cachedBalance")
-    public void setCachedBalance(BigDecimal cachedBalance) {
+    public void setCachedBalance(Float cachedBalance) {
         this.cachedBalance = cachedBalance;
     }
 }

@@ -1,14 +1,17 @@
 package com.nosqlrevolution.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
  * @author cbrown
  */
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class SelectableFacet implements Comparable<SelectableFacet> {
     private String name;
-    private long count;
+    private Long count;
+    private Double value;
     private Boolean selected = Boolean.FALSE;
     
     public SelectableFacet() { }
@@ -30,13 +33,24 @@ public class SelectableFacet implements Comparable<SelectableFacet> {
     }
 
     @JsonProperty("count")
-    public long getCount() {
+    public Long getCount() {
         return count;
     }
 
     @JsonProperty("count")
-    public SelectableFacet setCount(long count) {
+    public SelectableFacet setCount(Long count) {
         this.count = count;
+        return this;
+    }
+
+    @JsonProperty("value")
+    public Double getValue() {
+        return value;
+    }
+
+    @JsonProperty("value")
+    public SelectableFacet setValue(Double value) {
+        this.value = value;
         return this;
     }
 

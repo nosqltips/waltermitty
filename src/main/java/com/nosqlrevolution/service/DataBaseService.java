@@ -1,11 +1,5 @@
 package com.nosqlrevolution.service;
 
-import com.nosqlrevolution.model.data.ContributionsAndPayments;
-import com.nosqlrevolution.model.data.Dependent;
-import com.nosqlrevolution.model.data.ClaimDetail;
-import com.nosqlrevolution.model.data.Member;
-import com.nosqlrevolution.model.data.Claim;
-import com.nosqlrevolution.model.data.Balance;
 import com.nosqlrevolution.model.data.Balance;
 import com.nosqlrevolution.model.data.Claim;
 import com.nosqlrevolution.model.data.ClaimDetail;
@@ -13,7 +7,6 @@ import com.nosqlrevolution.model.data.ContributionsAndPayments;
 import com.nosqlrevolution.model.data.Dependent;
 import com.nosqlrevolution.model.data.Member;
 import com.nosqlrevolution.waltermitty.App;
-
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -98,9 +91,11 @@ public class DataBaseService
                     }
 
                     member.setState(resultSet.getString("State"));
-                    member.setZip(resultSet.getString("Zip"));
+                    member.setZip(trimZip(resultSet.getString("Zip")));
                     member.setGender(resultSet.getString("Gender"));
                     member.setBirthYear(resultSet.getString("BirthYear"));
+                    member.setBirthDecade(getBirthDecade(member.getBirthYear()));
+                    member.setAge(getAge(member.getBirthYear()));
                     member.setHsaEffectiveDate(resultSet.getTimestamp("HsaEffectiveDate"));
 
                     member.setDependents(getDependents(member.getNewMemberID()));
@@ -108,9 +103,6 @@ public class DataBaseService
                     member.setClaims(getClaims(member.getNewMemberID()));
                     if (member.getClaims() != null)
                     {
-                        List<String> cptCodesAll = new ArrayList<String>();
-                        Set<String> cptCodesUnique = new HashSet<String>();
-
                         for (Claim claim: member.getClaims())
                         {
                             member.addCptCodesAll(claim.getCptCodesAll());
@@ -120,6 +112,9 @@ public class DataBaseService
 
                     
                     member.setContributionsAndPayments(getContributionsAndPayments(member.getNewMemberID()));
+                    member.setMemberContributions(getMemberContributions(member.getContributionsAndPayments()));
+                    member.setMemberPayments(getMemberPayments(member.getContributionsAndPayments()));
+                    member.setCompanyContributions(getCompanyContributions(member.getContributionsAndPayments()));
 
                     members.add(member);
                 }
@@ -166,9 +161,11 @@ public class DataBaseService
                     dependent.setDependentID(resultSetDependent.getInt("DependentID"));
                     dependent.setRelationship(resultSetDependent.getString("Relationship"));
                     dependent.setBirthYear(resultSetDependent.getString("BirthYear"));
+                    dependent.setBirthDecade(getBirthDecade(dependent.getBirthYear()));
+                    dependent.setAge(getAge(dependent.getBirthYear()));
                     dependent.setGender(resultSetDependent.getString("Gender"));
                     dependent.setState(resultSetDependent.getString("State"));
-                    dependent.setZip(resultSetDependent.getString("Zip"));
+                    dependent.setZip(trimZip(resultSetDependent.getString("Zip")));
 
                     dependents.add(dependent);
                 }
@@ -212,8 +209,8 @@ public class DataBaseService
                     claim.setDateProcessed(resultSetClaim.getTimestamp("DateProcessed"));
                     claim.setServiceStart(resultSetClaim.getTimestamp("ServiceStart"));
                     claim.setServiceEnd(resultSetClaim.getTimestamp("ServiceEnd"));
-                    claim.setRepricedAmount(resultSetClaim.getBigDecimal("RepricedAmount"));
-                    claim.setPatientResponsibilityAmount(resultSetClaim.getBigDecimal("PatientResponsibilityAmount"));
+                    claim.setRepricedAmount(resultSetClaim.getFloat("RepricedAmount"));
+                    claim.setPatientResponsibilityAmount(resultSetClaim.getFloat("PatientResponsibilityAmount"));
 
                     claim.setClaimDetails(getClaimDetails(claim.getNewClaimID()));
                     if (claim.getClaimDetails() != null)
@@ -270,7 +267,7 @@ public class DataBaseService
                     }
                     Balance balance = new Balance();
                     balance.setNewMemberID(resultSetBalance.getInt("NewMemberID"));
-                    balance.setCachedBalance(resultSetBalance.getBigDecimal("CachedBalance"));
+                    balance.setCachedBalance(resultSetBalance.getFloat("CachedBalance"));
 
                     balances.add(balance);
                 }
@@ -354,7 +351,7 @@ public class DataBaseService
                     }
                     ContributionsAndPayments contributionsAndPayments = new ContributionsAndPayments();
                     contributionsAndPayments.setNewMemberID(resultSetContributions.getInt("NewMemberID"));
-                    contributionsAndPayments.setAmount(resultSetContributions.getBigDecimal("Amount"));
+                    contributionsAndPayments.setAmount(resultSetContributions.getFloat("Amount"));
                     contributionsAndPayments.setCategory(resultSetContributions.getString("Category"));
                     contributionsAndPayments.setPaymentAvailableDate(resultSetContributions.getTimestamp("PaymentAvailableDate"));
 
@@ -377,5 +374,63 @@ public class DataBaseService
             }
         }
         return contributionsAndPaymentsList;
+    }
+    
+    private String getBirthDecade(String birthYear) {
+        if (birthYear == null || birthYear.isEmpty()) { return null; }
+        return (birthYear.substring(0, 2) + "0");
+    }
+    
+    private String getAge(String birthYear) {
+        try {
+            int birth = Integer.parseInt(birthYear);
+            return Integer.toString(2014 - birth);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    
+    private String trimZip(String zip) {
+        if (zip == null || zip.isEmpty() || zip.length() == 5) { return zip; }
+        return zip.substring(0,4);
+    }
+
+    private ArrayList<ContributionsAndPayments> getMemberContributions(ArrayList<ContributionsAndPayments> contributions) {
+        if (contributions == null || contributions.isEmpty()) { return null; }
+        
+        ArrayList<ContributionsAndPayments> out = new ArrayList<ContributionsAndPayments>();
+        for (ContributionsAndPayments contrib: contributions) {
+            if (contrib.getCategory().equalsIgnoreCase("ContEmployee")) {
+                out.add(contrib);
+            }
+        }
+        
+        return ! out.isEmpty() ? out : null;
+    }
+
+    private ArrayList<ContributionsAndPayments> getMemberPayments(ArrayList<ContributionsAndPayments> contributions) {
+        if (contributions == null || contributions.isEmpty()) { return null; }
+        
+        ArrayList<ContributionsAndPayments> out = new ArrayList<ContributionsAndPayments>();
+        for (ContributionsAndPayments contrib: contributions) {
+            if (contrib.getCategory().equalsIgnoreCase("DistNormal")) {
+                out.add(contrib);
+            }
+        }
+        
+        return ! out.isEmpty() ? out : null;
+    }
+
+    private ArrayList<ContributionsAndPayments> getCompanyContributions(ArrayList<ContributionsAndPayments> contributions) {
+        if (contributions == null || contributions.isEmpty()) { return null; }
+        
+        ArrayList<ContributionsAndPayments> out = new ArrayList<ContributionsAndPayments>();
+        for (ContributionsAndPayments contrib: contributions) {
+            if (contrib.getCategory().equalsIgnoreCase("ContEmployer")) {
+                out.add(contrib);
+            }
+        }
+        
+        return ! out.isEmpty() ? out : null;
     }
 }

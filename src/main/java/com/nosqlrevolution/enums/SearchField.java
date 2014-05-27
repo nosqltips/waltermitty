@@ -5,7 +5,7 @@ package com.nosqlrevolution.enums;
  * @author cbrown
  */
 public enum SearchField {
-    MEMBER_ID("memberId"),
+    MEMBER_ID("newMemberID"),
     STATE("state"),
     ZIP("zip"),
     GENDER("gender"),

@@ -1,16 +1,19 @@
 package com.nosqlrevolution.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class Result implements Serializable {
     private String memberId;
     private String state;
     private String zip;
     private String birthYear;
-    private String numDependents;
-    private String numPayments;
-    private String numClaims;
+    private String gender;
+    private Integer numDependents;
+    private Integer numPayments;
+    private Integer numClaims;
     
     private Float score;
             
@@ -56,38 +59,48 @@ public class Result implements Serializable {
         this.birthYear = birthYear;
     }
 
+    @JsonProperty("gender")
+    public String getGender() {
+        return gender;
+    }
+
+    @JsonProperty("gender")
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     @JsonProperty("numDependents")
-    public String getNumDependents() {
+    public Integer getNumDependents() {
         return numDependents;
     }
 
     @JsonProperty("numDependents")
-    public void setNumDependents(String numDependents) {
+    public void setNumDependents(Integer numDependents) {
         this.numDependents = numDependents;
     }
 
     @JsonProperty("numPayments")
-    public String getNumPayments() {
+    public Integer getNumPayments() {
         return numPayments;
     }
 
     @JsonProperty("numPayments")
-    public void setNumPayments(String numPayments) {
+    public void setNumPayments(Integer numPayments) {
         this.numPayments = numPayments;
     }
 
     @JsonProperty("numClaims")
-    public String getNumClaims() {
+    public Integer getNumClaims() {
         return numClaims;
     }
 
     @JsonProperty("numClaims")
-    public void setNumClaims(String numClaims) {
+    public void setNumClaims(Integer numClaims) {
         this.numClaims = numClaims;
     }
     
     @JsonProperty("score")
-    public float getScore() {
+    public Float getScore() {
         return score;
     }
 

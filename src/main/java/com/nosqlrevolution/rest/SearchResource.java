@@ -3,6 +3,7 @@ package com.nosqlrevolution.rest;
 import com.nosqlrevolution.model.SearchQuery;
 import com.nosqlrevolution.service.SearchService;
 import java.util.logging.Logger;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -10,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  * @author cbrown
@@ -47,9 +49,9 @@ public class SearchResource {
      * @return 
      */
     @POST
+    @Consumes("application/json")    
     @Produces("application/json")    
-    public SearchQuery search(
-            @QueryParam("searchQuery") SearchQuery query) {
+    public SearchQuery search(SearchQuery query) {
         
         return search.search(query);
     }

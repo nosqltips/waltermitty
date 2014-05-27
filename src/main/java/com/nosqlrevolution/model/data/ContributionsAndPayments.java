@@ -1,12 +1,11 @@
 package com.nosqlrevolution.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class ContributionsAndPayments {
     private int newMemberID;
-    private BigDecimal amount;
+    private Float amount;
     private String category;
     private Timestamp paymentAvailableDate;
 
@@ -21,12 +20,12 @@ public class ContributionsAndPayments {
     }
 
     @JsonProperty("amount")
-    public BigDecimal getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
     @JsonProperty("amount")
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Float amount) {
         this.amount = amount;
     }
 

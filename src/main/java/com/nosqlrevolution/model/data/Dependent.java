@@ -7,6 +7,8 @@ public class Dependent {
     private int dependentID;
     private String relationship;
     private String birthYear;
+    private String birthDecade;
+    private String age;
     private String gender;
     private String state;
     private String zip;
@@ -49,6 +51,26 @@ public class Dependent {
     @JsonProperty("birthYear")
     public void setBirthYear(String birthYear) {
         this.birthYear = birthYear;
+    }
+
+    @JsonProperty("birthDecade")
+    public String getBirthDecade() {
+        return birthDecade;
+    }
+
+    @JsonProperty("birthDecade")
+    public void setBirthDecade(String birthDecade) {
+        this.birthDecade = birthDecade;
+    }
+
+    @JsonProperty("age")
+    public String getAge() {
+        return age;
+    }
+
+    @JsonProperty("age")
+    public void setAge(String age) {
+        this.age = age;
     }
 
     @JsonProperty("gender")

@@ -1,7 +1,9 @@
 package com.nosqlrevolution.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nosqlrevolution.enums.FacetField;
+import com.nosqlrevolution.enums.AggregationField;
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,9 +11,10 @@ import java.util.List;
  *
  * @author cbrown
  */
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class FacetRequest implements Serializable {
     // The field name we are faceting on.
-    private FacetField field;
+    private AggregationField field;
     // How many facets to return.
     private int size = 10;
     // All of the rerned facets the user can choose from.
@@ -19,23 +22,29 @@ public class FacetRequest implements Serializable {
     
     public FacetRequest() {}
 
-    public FacetRequest(FacetField field) {
+    public FacetRequest(AggregationField field) {
         this.field = field;
     }
 
-    public FacetRequest(FacetField field, int size) {
+    public FacetRequest(AggregationField field, int size) {
         this.field = field;
         this.size = size;
     }
     
     @JsonProperty("field")
-    public FacetField getField() {
+    public AggregationField getField() {
         return field;
     }
 
     @JsonProperty("field")
-    public FacetRequest setField(FacetField field) {
+    public FacetRequest setField(AggregationField field) {
         this.field = field;
+        return this;
+    }
+
+    @JsonIgnore
+    public FacetRequest setField(String fieldName) {
+        this.field = AggregationField.valueOf(fieldName);
         return this;
     }
 

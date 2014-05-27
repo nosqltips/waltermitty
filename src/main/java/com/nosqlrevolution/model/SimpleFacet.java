@@ -1,11 +1,13 @@
 package com.nosqlrevolution.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
  * @author cbrown
  */
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class SimpleFacet implements Comparable<SimpleFacet> {
     private String name;
     private Integer count;

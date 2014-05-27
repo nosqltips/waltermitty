@@ -4,7 +4,7 @@ package com.nosqlrevolution.enums;
  *
  * @author cbrown
  */
-public enum FacetField {
+public enum AggregationField {
     STATE("state", "State"),
     ZIP("zip", "Zip"),
     GENDER("gender", "Gender"),
@@ -24,11 +24,13 @@ public enum FacetField {
     TOTAL_CLAIMS("totalClaimsRepricedAmount", "Total Claims"),
     TOTAL_CLAIMS_PATIENT("totalClaimsPatientResponsibilityAmount", "Total Claims Patient"),
     CPT_CODES_ALL("cptCodesAll", "CPT Codes All"),
-    CPT_CODES_UNIQUE("cptCodesUnique", "CPT Codes Unique");
+    CPT_CODES_UNIQUE("cptCodesUnique", "CPT Codes Unique"),
+    
+    CLAIM_TYPE("contributionsAndPayments.category", "Claim Type");
     
     private final String name;
     private final String display;
-    FacetField(String name, String display) {
+    AggregationField(String name, String display) {
         this.name = name;
         this.display = display;
     }
