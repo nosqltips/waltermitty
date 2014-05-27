@@ -1,7 +1,7 @@
 package com.nosqlrevolution.waltermittyclient.client.cmd;
 
 import com.google.gwt.core.client.Scheduler;
-import com.nosqlrevolution.model.SearchQuery;
+import com.nosqlrevolution.waltermittyclient.client.model.SearchQuery;
 
 import java.util.Map;
 

@@ -2,7 +2,7 @@ package com.nosqlrevolution.waltermittyclient.client;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.nosqlrevolution.model.SearchQuery;
+import com.nosqlrevolution.waltermittyclient.client.model.SearchQuery;
 
 /**
  *
