@@ -54,6 +54,10 @@ public class MoreLikeThisService implements Serializable {
         sq.setPageFrom(0);
         sq.setPageSize(100);
         
+        if (sq.getBoosts() == null) {
+            sq.setBoosts(BoostService.getDefaultBoosts());
+        }
+        
         try {
             // Objectify the Member object so we can work with it.
             Member member = mapper.readValue(response.getHits().getAt(0).getSourceAsString(), Member.class);
@@ -80,7 +84,7 @@ public class MoreLikeThisService implements Serializable {
             sq.addFacet(AggregationUtil.getFacetRequest(AggregationField.TOTAL_PAYMENTS, member.getTotalPayments()));
             
             // Get all builder models
-            List<BuilderModel> builders = QueryUtil.addAllSelectionsMLT(new ArrayList<BuilderModel>(), sq.getFacets(), BuilderModel.BooleanType.SHOULD);
+            List<BuilderModel> builders = QueryUtil.addAllSelectionsMLT(new ArrayList<BuilderModel>(), sq.getFacets(), BuilderModel.BooleanType.SHOULD, sq.getBoosts());
             // Remove the selected user from the MLT results
             builders.add(new BuilderModel(getQueryBuilder(SearchField.MEMBER_ID.getName(), Integer.toString(member.getNewMemberID())), QUERY, BuilderModel.BooleanType.MUST_NOT));
             

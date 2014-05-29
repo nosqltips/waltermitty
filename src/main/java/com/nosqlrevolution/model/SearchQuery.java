@@ -21,6 +21,7 @@ public class SearchQuery implements Serializable {
     private List<Result> results;
     private List<FacetRequest> facets;
     private List<Chart> charts;
+    private List<Boost> boosts;
     
     public SearchQuery() {}
 
@@ -112,6 +113,16 @@ public class SearchQuery implements Serializable {
     @JsonProperty("charts")
     public void setCharts(List<Chart> charts) {
         this.charts = charts;
+    }
+
+    @JsonProperty("boosts")
+    public List<Boost> getBoosts() {
+        return boosts;
+    }
+
+    @JsonProperty("boosts")
+    public void setBoosts(List<Boost> boosts) {
+        this.boosts = boosts;
     }
     
     @JsonIgnore
