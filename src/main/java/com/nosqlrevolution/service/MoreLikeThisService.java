@@ -5,9 +5,12 @@ import com.nosqlrevolution.enums.AggregationField;
 import com.nosqlrevolution.enums.SearchField;
 import com.nosqlrevolution.model.BuilderModel;
 import static com.nosqlrevolution.model.BuilderModel.QueryType.QUERY;
+import com.nosqlrevolution.model.Chart;
+import com.nosqlrevolution.model.FacetRequest;
 import com.nosqlrevolution.model.SearchQuery;
 import com.nosqlrevolution.model.data.Member;
 import com.nosqlrevolution.util.AggregationUtil;
+import com.nosqlrevolution.util.ChartUtil;
 import com.nosqlrevolution.util.QueryUtil;
 import static com.nosqlrevolution.util.QueryUtil.getQueryBuilder;
 import java.io.IOException;
@@ -18,7 +21,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
 
 /**
  * 
@@ -77,11 +84,64 @@ public class MoreLikeThisService implements Serializable {
             // Remove the selected user from the MLT results
             builders.add(new BuilderModel(getQueryBuilder(SearchField.MEMBER_ID.getName(), Integer.toString(member.getNewMemberID())), QUERY, BuilderModel.BooleanType.MUST_NOT));
             
-            return new SearchService().search(sq, builders);
+            return search(sq, builders);
         } catch (IOException ex) {
             Logger.getLogger(MoreLikeThisService.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return sq;
-   }
+    }
+    
+    
+    public SearchQuery search(SearchQuery sq, List<BuilderModel> builders) {
+        QueryBuilder qb;
+        
+        // This is good for populating the first page.
+        if (sq.getMemberId() == null && builders == null) {
+            qb = QueryUtil.getMatchAllQuery();
+            sq.setPageFrom(0);
+            sq.setPageSize(50);
+        } else if (sq.getMemberId() != null && builders == null) {
+            qb = QueryUtil.getTermBuilder(SearchField.MEMBER_ID.getName(), sq.getMemberId());
+        } else {
+            if ((builders.size() > 1) || (builders.get(0).getBooleanType() != BuilderModel.BooleanType.MUST)) {
+                qb = QueryUtil.getBooleanQuery(builders);
+            } else {
+                qb = builders.get(0).getQueryBuilder();
+            }
+        }
+
+        SearchRequestBuilder builder = client.prepareSearch(ClientService.INDEX)
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setQuery(qb)
+                .setFrom(sq.getPageFrom())
+                .setSize(sq.getPageSize());
+        
+        // Add all Aggregations
+        List<AbstractAggregationBuilder> aggBuilders = ChartUtil.addAllCharts(ChartService.getCharts());
+        if (aggBuilders != null) {
+            for (AbstractAggregationBuilder aggBuilder: aggBuilders) {
+                builder.addAggregation(aggBuilder);
+            }
+        }
+        System.out.println("Builder=" + builder.toString());
+        
+        SearchResponse response = builder.execute().actionGet();
+        List<Chart> charts = null;
+        if (response.getAggregations() != null) {
+            charts = ChartUtil.parseCharts(response.getAggregations());
+        }
+        
+        // Update the SearchQuery results
+        SearchHits h = response.getHits();
+        sq.setTimeMillis(Long.toString(response.getTookInMillis()));
+        sq.setTotalResults(h.getTotalHits());
+        sq.setAvailableResults(h.getHits().length);
+        
+        System.out.println("MltService " + response.getHits().getTotalHits());
+        sq.setResults(SearchResultService.generateSearchOutput(h.getHits()));
+        sq.setFacets(null);
+        sq.setCharts(charts);
+        return sq;
+    }
 }
