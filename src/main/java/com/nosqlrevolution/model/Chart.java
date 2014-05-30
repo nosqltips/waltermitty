@@ -32,34 +32,34 @@ public class Chart implements Comparable<Chart>, Serializable {
     }
 
     @JsonProperty("chartField")
-    public ChartField getField() {
+    public ChartField getChartField() {
         return chartField;
     }
 
     @JsonProperty("chartField")
-    public Chart setField(ChartField chartField) {
+    public Chart setChartField(ChartField chartField) {
         this.chartField = chartField;
         return this;
     }
 
     @JsonProperty("chartType")
-    public ChartType getType() {
+    public ChartType getChartType() {
         return chartType;
     }
 
     @JsonProperty("chartType")
-    public Chart setType(ChartType chartType) {
+    public Chart setChartType(ChartType chartType) {
         this.chartType = chartType;
         return this;
     }
 
     @JsonProperty("chartValues")
-    public List<ChartValue> getValues() {
+    public List<ChartValue> getChartValues() {
         return chartValues;
     }
 
     @JsonProperty("chartValues")
-    public Chart setValues(List<ChartValue> chartValues) {
+    public Chart setChartValues(List<ChartValue> chartValues) {
         this.chartValues = chartValues;
         return this;
     }

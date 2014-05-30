@@ -116,12 +116,12 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
         // We can add style names to widgets
         sendButton.addStyleName("sendButton");
 
-//        HorizontalPanel hp = new HorizontalPanel();
-//        hp.add(nameField);
-//        hp.add(sendButton);
-////        hp.add(errorLabel);
-//        hp.setStyleName("westPanelTopPanel");
-//        westPanel.add(hp);
+        HorizontalPanel hp = new HorizontalPanel();
+        hp.add(nameField);
+        hp.add(sendButton);
+//        hp.add(errorLabel);
+        hp.setStyleName("westPanelTopPanel");
+        westPanel.add(hp);
 
         westPanelContainer.getElement().setId("westPanelVertContainer");
         westPanelContainer.setStyleName("westPanelVertContainer");
@@ -131,8 +131,8 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
 //        facetContainer.getElement().setId("facetContainer");
 //        facetContainer.setStyleName("facetContainer");
 
-        sliderVerticalPanelPanel = new SliderVerticalPanelPanel();
-        facetScrollContainer.add(sliderVerticalPanelPanel);
+//        sliderVerticalPanelPanel = new SliderVerticalPanelPanel();
+//        facetScrollContainer.add(sliderVerticalPanelPanel);
         facetScrollContainer.setStyleName("facetScrollContainer");
         westPanel.add(westPanelContainer);
 //
@@ -206,7 +206,7 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
             public void onFailure(Throwable caught) {
                 caught.printStackTrace();
 
-                centerPanelContainerPanel.update(searchQuery.getResults());
+                centerPanelContainerPanel.update(searchQuery);
                 southPanel.setMessage(caught.getMessage());
                 centerPanelContainerPanel.showPleaseWait(false);
 
@@ -224,7 +224,7 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
             @Override
             public void onSuccess(SearchQuery searchQuery) {
                 // Re-initialize UI - Tables, ???
-                centerPanelContainerPanel.update(searchQuery.getResults());
+                centerPanelContainerPanel.update(searchQuery);
                 southPanel.update(searchQuery);
                 centerPanelContainerPanel.showPleaseWait(false);
             }
@@ -280,7 +280,7 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
         String textToServer = memberId;
         if (textToServer == null || textToServer.isEmpty() || textToServer.equalsIgnoreCase(messages.nameField()))
         {
-            textToServer = "";
+            textToServer = "460";
         }
 
         // Then, we send the input to the server.
@@ -324,10 +324,10 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
                 }
 
                 MltPanel.this.searchQuery = searchQuery;
-                sliderVerticalPanelPanel.update(searchQuery.getBoosts());
+//                sliderVerticalPanelPanel.update(searchQuery.getBoosts());
 
                 // Update center panel
-                centerPanelContainerPanel.update(searchQuery.getResults());
+                centerPanelContainerPanel.update(searchQuery);
                 centerPanelContainerPanel.showPleaseWait(false);
 
                 // Update south/bottom panel

@@ -6,9 +6,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.nosqlrevolution.waltermittyclient.client.charts.ChartPanel;
 import com.nosqlrevolution.waltermittyclient.client.cmd.GetRestCmd;
 import com.nosqlrevolution.waltermittyclient.client.widgets.PleaseWaitWidget;
-import com.nosqlrevolution.waltermittyclient.model.Result;
-
-import java.util.List;
+import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 
 /**
  *
@@ -161,7 +159,8 @@ public class CenterPanelContainerPanel extends FlowPanel
         }
     }
 
-    public void update(List<Result> results) {
-        centerPanel.update(results);
+    public void update(SearchQuery searchQuery) {
+        centerPanel.update(searchQuery.getResults());
+        chartPanel.update(searchQuery);
     }
 }

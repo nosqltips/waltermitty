@@ -49,7 +49,7 @@ public class PieChartPanel extends Composite {
         options.setWidth(400);
         options.setHeight(240);
 //        options.set3D(true);
-        options.setTitle("Pizza Slices");
+//        options.setTitle("Pizza Slices");
         return options;
     }
 
