@@ -178,7 +178,7 @@ public class MoreLikeThisService implements Serializable {
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryUtil.getTermsBuilder(SearchField.MEMBER_ID.getName(), memberIds))
                 .setFrom(0)
-                .setSize(100);
+                .setSize(0);
         
         // Add all Aggregations
         List<AbstractAggregationBuilder> aggBuilders = ChartUtil.addAllCharts(ChartService.getCharts());
@@ -191,7 +191,6 @@ public class MoreLikeThisService implements Serializable {
         
         SearchResponse response = builder.execute().actionGet();
         
-        System.out.println("chart response=" + response.getHits().getTotalHits()); 
         List<Chart> charts = null;
         if (response.getAggregations() != null) {
             charts = ChartUtil.parseCharts(response.getAggregations());
@@ -233,8 +232,6 @@ public class MoreLikeThisService implements Serializable {
         List<String> headers = null;
         List<LineChartValue> lineChartValues = new ArrayList<>();
         
-        System.out.println("number of MEMBER charts=" + memberCharts.size());
-        System.out.println("number of GROUP charts=" + groupCharts.size());
         for (Chart chart: memberCharts) {
             switch (chart.getField()) {
                 case MEMBER_CONTRIBUTIONS:

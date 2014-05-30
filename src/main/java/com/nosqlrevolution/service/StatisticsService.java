@@ -3,8 +3,6 @@ package com.nosqlrevolution.service;
 import com.nosqlrevolution.model.Chart;
 import com.nosqlrevolution.model.ChartValue;
 import com.nosqlrevolution.model.StatsValues;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
