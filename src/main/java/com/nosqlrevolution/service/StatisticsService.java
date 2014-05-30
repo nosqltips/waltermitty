@@ -34,7 +34,7 @@ public class StatisticsService {
             Double sum = getSum(value.getChartValues());
             // Looking for the average per member.
             sum = sum/totalMembers;
-            monthlyAverages.add(new ChartValue(value.getName(), sum));
+            monthlyAverages.add(new ChartValue(value.getName(), round(sum)));
             totalSum += sum;
             
             // Look for the 2014 values and sum
