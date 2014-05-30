@@ -280,7 +280,7 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
         String textToServer = memberId;
         if (textToServer == null || textToServer.isEmpty() || textToServer.equalsIgnoreCase(messages.nameField()))
         {
-            textToServer = "1";
+            textToServer = "460";
         }
 
         // Then, we send the input to the server.

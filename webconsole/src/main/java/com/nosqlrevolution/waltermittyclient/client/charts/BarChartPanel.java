@@ -142,9 +142,8 @@ public class BarChartPanel extends Composite {
     private AbstractDataTable createChartDataTable() {
         DataTable data = DataTable.create();
 
-
-            data.addColumn(AbstractDataTable.ColumnType.STRING, chart.getName());
-            data.addColumn(AbstractDataTable.ColumnType.NUMBER, "Count");
+        data.addColumn(AbstractDataTable.ColumnType.STRING, chart.getName());
+        data.addColumn(AbstractDataTable.ColumnType.NUMBER, "Count");
         data.addRows(chart.getChartValues().size());
 
         int row = 0;
