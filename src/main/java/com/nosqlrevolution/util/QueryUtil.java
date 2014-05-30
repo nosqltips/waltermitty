@@ -13,8 +13,8 @@ import java.util.List;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.FilterBuilder;
-import static org.elasticsearch.index.query.FilterBuilders.*;
 import org.elasticsearch.index.query.QueryBuilder;
+import static org.elasticsearch.index.query.FilterBuilders.*;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
@@ -46,6 +46,10 @@ public class QueryUtil {
     public static QueryBuilder getTermBuilder(String field, String value) {
         return termQuery(field, value);
     }
+    public static QueryBuilder getTermsBuilder(String field, List<String> values) {
+        return termsQuery(field, values.toArray(new String[values.size()]));
+    }
+    
     
     public static QueryBuilder getTermBuilder(String field, String value, float boost) {
         return termQuery(field, value)
@@ -64,6 +68,10 @@ public class QueryUtil {
         return matchAllFilter();
     }
 
+    public static FilterBuilder getInFilter(String field, List<String> values) {
+        return inFilter(field, values.toArray(new String[values.size()]));
+    }
+    
     public static FilterBuilder getBooleanFilter(List<BuilderModel> models) {
         BoolFilterBuilder bq = boolFilter();
         for (BuilderModel model : models) {

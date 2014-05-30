@@ -94,6 +94,7 @@ public class DataBaseService
                     member.setZip(trimZip(resultSet.getString("Zip")));
                     member.setGender(resultSet.getString("Gender"));
                     member.setBirthYear(resultSet.getString("BirthYear"));
+                    member.setBirthYearNum(getBirthYearNum(member.getBirthYear()));
                     member.setBirthDecade(getBirthDecade(member.getBirthYear()));
                     member.setAge(getAge(member.getBirthYear()));
                     member.setHsaEffectiveDate(resultSet.getTimestamp("HsaEffectiveDate"));
@@ -161,6 +162,7 @@ public class DataBaseService
                     dependent.setDependentID(resultSetDependent.getInt("DependentID"));
                     dependent.setRelationship(resultSetDependent.getString("Relationship"));
                     dependent.setBirthYear(resultSetDependent.getString("BirthYear"));
+                    dependent.setBirthYearNum(getBirthYearNum(dependent.getBirthYear()));
                     dependent.setBirthDecade(getBirthDecade(dependent.getBirthYear()));
                     dependent.setAge(getAge(dependent.getBirthYear()));
                     dependent.setGender(resultSetDependent.getString("Gender"));
@@ -381,10 +383,18 @@ public class DataBaseService
         return (birthYear.substring(0, 2) + "0");
     }
     
-    private String getAge(String birthYear) {
+    private Integer getBirthYearNum(String birthYear) {
+        try {
+            return Integer.parseInt(birthYear);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    
+    private Integer getAge(String birthYear) {
         try {
             int birth = Integer.parseInt(birthYear);
-            return Integer.toString(2014 - birth);
+            return 2014 - birth;
         } catch (NumberFormatException e) {
             return null;
         }
