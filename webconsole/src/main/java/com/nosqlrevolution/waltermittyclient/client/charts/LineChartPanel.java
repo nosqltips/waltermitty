@@ -100,52 +100,21 @@ public class LineChartPanel extends Composite {
         data.addRows(lineChartModel.getHeader().getValues().size());
 
         int row = 0;
+        int specialCount = 0;
         List<LineChartValue> rowData = lineChartModel.getValues();
-        for (String columnName: lineChartModel.getHeader().getValues()) {
-            data.setValue(row, 0, columnName);
+        for (String name: lineChartModel.getHeader().getValues()) {
+            data.setValue(row, 0, name);
 
-//            LineChartValue lineChartValue = rowData.get(row);
-//            int column = 1;
-//            for (Double value: lineChartValue.getValues()) {
-//                data.setValue(row, column, value);
-//                column++;
-//            }
+            int column = 1;
+            for (LineChartValue lineChartValue: lineChartModel.getValues()) {
+                if (row < lineChartValue.getValues().size())
+                {
+                    data.setValue(row, column, lineChartValue.getValues().get(row));
+                    column++;
+                }
+            }
             row++;
         }
-
-
-
-//        data.addRows(lineChartModel.getValues().size());
-////        data.addRows(lineChartModel.getHeader().getValues().size());
-//
-//        int row = 0;
-//        int column =0;
-//        List<LineChartValue> lineChartModelValues = lineChartModel.getValues();
-////        for (LineChartValue lineChartValue: lineChartModel.getValues()) {
-////        List<LineChartValue> lineChartModelValues = lineChartModel.getValues();
-////          List<LineChartValue> lineChartModelValues = lineChartModel.getValues();
-////          for (String columnName: lineChartModel.getHeader().getValues()) {
-//            for (String columnName: lineChartModel.getHeader().getValues()) {
-//                row = 0;
-//            data.setValue(row, 0, columnName);
-////            column =1;
-//            int i = 0;
-//            for (Double valueDouble: lineChartModelValues.get(i++).getValues()) {
-//                data.setValue(row++, column, valueDouble);
-//            }
-//            column++;
-//
-//        }
-////
-////        row = 0;
-////        for (LineChartValue lineChartValue: lineChartModel.getValues()) {
-////            column =1;
-////            for (Double value:lineChartValue.getValues()) {
-////                data.setValue(row, column++, value);
-////            }
-////            row++;
-////        }
-//
         return data;
     }
 
