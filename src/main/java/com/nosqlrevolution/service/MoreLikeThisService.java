@@ -233,7 +233,7 @@ public class MoreLikeThisService implements Serializable {
         List<LineChartValue> lineChartValues = new ArrayList<>();
         
         for (Chart chart: memberCharts) {
-            switch (chart.getField()) {
+            switch (chart.getChartField()) {
                 case MEMBER_CONTRIBUTIONS:
                     memberMemberContrib = StatisticsService.calculateStats(chart, 1, "2014");
                     break;
@@ -247,7 +247,7 @@ public class MoreLikeThisService implements Serializable {
         }
 
         for (Chart chart: groupCharts) {
-            switch (chart.getField()) {
+            switch (chart.getChartField()) {
                 case MEMBER_CONTRIBUTIONS:
                     groupMemberContrib = StatisticsService.calculateStats(chart, totalMembers, "2014");
                     // Get headers from this chart as all values should be populated.
@@ -328,7 +328,7 @@ public class MoreLikeThisService implements Serializable {
      */
     private List<String> generateHeaders(Chart chart) {
         List<String> headers = new ArrayList<>();
-        for (ChartValue value: chart.getValues()) {
+        for (ChartValue value: chart.getChartValues()) {
             headers.add(value.getName());
         }
         
@@ -409,7 +409,7 @@ public class MoreLikeThisService implements Serializable {
     private List<Chart> removeLineCharts(List<Chart> charts) {
         List<Chart> returnCharts = new ArrayList<>();
         for (Chart chart: charts) {
-            if (chart.getType() != LINE){
+            if (chart.getChartType() != LINE){
                 returnCharts.add(chart);
             }
         }

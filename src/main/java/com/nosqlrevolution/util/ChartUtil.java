@@ -171,13 +171,12 @@ public class ChartUtil {
         for (Aggregation aggregation: aggregations.asList()) {
             try {
                 String chartName = aggregation.getName();
-                System.out.println("chartName " + chartName);
                 ChartField chartField = ChartField.valueOf(chartName);
 
                 charts.add(new Chart()
-                    .setField(chartField)
-                    .setType(chartField.getType())
-                    .setValues(parseSingleChart(aggregation, chartField))
+                    .setChartField(chartField)
+                    .setChartType(chartField.getType())
+                    .setChartValues(parseSingleChart(aggregation, chartField))
                 );
             } catch (Exception e) {                    
                 logger.log(Level.WARNING, "Could not parse aggregation for type {0}", aggregation.getName());

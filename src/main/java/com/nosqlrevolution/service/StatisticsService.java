@@ -20,7 +20,7 @@ public class StatisticsService {
      * @return  
      */
     public static StatsValues calculateStats(Chart chart, double totalMembers, String latestYear) {
-        List<ChartValue> chartValues = chart.getValues();
+        List<ChartValue> chartValues = chart.getChartValues();
         List<ChartValue> monthlyAverages = new ArrayList<>();
         Double totalSum = 0.0D;
         Double sumLatestYear = 0.0D;
@@ -44,7 +44,7 @@ public class StatisticsService {
         Double projectedYearEndTotalContribution = sumLatestYear + ((12 - latestYearContributions) * overallAverage);
 
         return new StatsValues()
-                .setName(chart.getField().toString())
+                .setName(chart.getChartField().toString())
                 .setMonthlyAverages(monthlyAverages)
                 .setOverallAverage(round(overallAverage))
                 .setProjectedYearEndTotal(round(projectedYearEndTotalContribution));
