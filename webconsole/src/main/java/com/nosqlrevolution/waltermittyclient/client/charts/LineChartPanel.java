@@ -77,7 +77,6 @@ public class LineChartPanel extends Composite {
         infoPanel.add(new Label("Group Monthly Contribution Increase: " + lineChart.getMemberMonthlyContributionIncrease().toString()));
         infoPanel.add(new Label("Group Yearly Contribution Increase: " + lineChart.getGroupYearlyContributionIncrease().toString()));
 
-//
         // Create a callback to be called when the visualization API
         // has been loaded.
         Runnable onLoadCallback = new Runnable() {
