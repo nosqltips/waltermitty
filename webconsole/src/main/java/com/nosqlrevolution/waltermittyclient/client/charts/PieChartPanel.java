@@ -22,6 +22,7 @@ public class PieChartPanel extends Composite {
 
     public PieChartPanel() {
         panel = new FlowPanel();
+        panel.setStyleName("pieChartPanel");
         initWidget(panel);
 
         
@@ -45,8 +46,8 @@ public class PieChartPanel extends Composite {
 
     private Options createOptions() {
         Options options = Options.create();
-        options.setWidth(800);
-        options.setHeight(480);
+        options.setWidth(400);
+        options.setHeight(240);
 //        options.set3D(true);
         options.setTitle("Pizza Slices");
         return options;

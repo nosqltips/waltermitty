@@ -5,16 +5,16 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.RowCountChangeEvent;
-import com.nosqlrevolution.waltermittyclient.model.Result;
 import com.nosqlrevolution.waltermittyclient.client.cmd.GetRestCmd;
 import com.nosqlrevolution.waltermittyclient.client.widgets.MittyClickableCellText;
 import com.nosqlrevolution.waltermittyclient.client.widgets.PleaseWaitWidget;
+import com.nosqlrevolution.waltermittyclient.model.Result;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author noSqlOrBust
  */
-public class CenterPanel extends FlowPanel
+public class CenterPanel extends LayoutPanel
 {
     private List<Result> results = new ArrayList<>();
     private ListDataProvider<Result> dataProvider;
@@ -34,13 +34,13 @@ public class CenterPanel extends FlowPanel
 
 
     public CenterPanel() {
-        setStyleName("centerPanel");
+        setStyleName("searchCenterPanel");
     }
 
     public CenterPanel(GetRestCmd restGetCmd)
     {
         this.restGetCmd = restGetCmd;
-        setStyleName("centerPanel");
+        setStyleName("searchCenterPanel");
 
         // Create a CellTable.
         table = new CellTable<Result>();
@@ -195,7 +195,10 @@ public class CenterPanel extends FlowPanel
         this.results = results;
 
         dataProvider.flush();
-        dataProvider.setList(results);
+        if (results != null)
+        {
+            dataProvider.setList(results);
+        }
         dataProvider.refresh();
 
         showPleaseWait(false);

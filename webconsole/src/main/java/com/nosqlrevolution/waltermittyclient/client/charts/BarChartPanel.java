@@ -12,6 +12,7 @@ import com.google.gwt.visualization.client.Selection;
 import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.events.SelectHandler;
 import com.google.gwt.visualization.client.visualizations.corechart.*;
+import com.nosqlrevolution.waltermittyclient.model.Result;
 
 /**
  * Created by noSqlOrBust on 5/24/2014.
@@ -22,6 +23,7 @@ public class BarChartPanel extends Composite {
 
     public BarChartPanel() {
         panel = new FlowPanel();
+        panel.setStyleName("barChartPanel");
         initWidget(panel);
 
         
@@ -102,5 +104,10 @@ public class BarChartPanel extends Composite {
         data.setValue(1, 0, "Sleep");
         data.setValue(1, 1, 10);
         return data;
+    }
+
+    public void update(Result result)
+    {
+
     }
 }

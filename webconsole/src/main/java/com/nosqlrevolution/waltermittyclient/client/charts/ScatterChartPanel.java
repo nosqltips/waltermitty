@@ -53,6 +53,8 @@ public class ScatterChartPanel extends Composite {
         options.setHeight(480);
 //        options.set3D(true);
         options.setTitle("Cool Widgets");
+//        options.set("trendlines", "0");
+
         options.setHAxisOptions(createHAxisOptions());
         options.setVAxisOptions(createVAxisOptions());
 
@@ -63,6 +65,7 @@ public class ScatterChartPanel extends Composite {
         AxisOptions options = AxisOptions.create();
         options.setTitle("Y");
         options.setBaselineColor("green");
+        options.set("trendlines", "0");
 
         return options;
     }
@@ -71,6 +74,19 @@ public class ScatterChartPanel extends Composite {
         AxisOptions options = AxisOptions.create();
         options.setTitle("X");
         options.setBaselineColor("green");
+
+        return options;
+    }
+
+    private Options createOptionsTrend() {
+        Options options = Options.create();
+        options.setWidth(800);
+        options.setHeight(480);
+//        options.set3D(true);
+        options.setTitle("Cool Widgets");
+        options.setHAxisOptions(createHAxisOptions());
+        options.setVAxisOptions(createVAxisOptions());
+        options.set("trendlines", "0");
 
         return options;
     }

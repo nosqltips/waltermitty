@@ -42,8 +42,8 @@ public class RestService {
             URL url;
             if (memberId != null && !memberId.isEmpty())
             {
-                url = new URL(searchUrl + "?memberId=" + memberId);
-                System.out.println(searchUrl + "?memberId=" + memberId);
+                url = new URL(mltUrl + "?memberId=" + memberId);
+                System.out.println(mltUrl + "?memberId=" + memberId);
             }
             else
             {

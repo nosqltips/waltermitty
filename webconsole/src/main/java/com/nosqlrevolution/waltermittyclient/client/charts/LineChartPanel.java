@@ -22,6 +22,7 @@ public class LineChartPanel extends Composite {
 
     public LineChartPanel() {
         panel = new FlowPanel();
+        panel.setStyleName("lineChartPanel");
         initWidget(panel);
 
         
