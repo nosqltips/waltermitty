@@ -121,8 +121,8 @@ public class MoreLikeThisService implements Serializable {
             sq.setLineChart(generateLineChartDate(memberCharts, groupCharts, totalMembers));
             
             // Need to remove the line charts before adding
-            sq.setCharts(groupCharts);
-//            sq.setCharts(removeLineCharts(groupCharts));                    
+//            sq.setCharts(groupCharts);
+            sq.setCharts(removeLineCharts(groupCharts));                    
             
             // Calculate the elapsed time of all of the calls.
             long elapsedTime = System.currentTimeMillis() - startTime;
@@ -291,14 +291,14 @@ public class MoreLikeThisService implements Serializable {
         }
         
         LineChart lineChart = new LineChart()
-                .setMemberMonthlyContributionIncrease(memberMonthlyContributionIncrease)
-                .setMemberYearlyContributionIncrease(memberMonthlyContributionIncrease * 12)
-                .setMemberTotalYearContrib(memberTotalYearContrib)
-                .setMemberYearEndBalance(memberYearEndBalance)
-                .setGroupMonthlyContributionIncrease(groupMonthlyContributionIncrease)
-                .setGroupYearlyContributionIncrease(groupMonthlyContributionIncrease * 12)
-                .setGroupTotalYearContrib(groupTotalYearContrib)
-                .setGroupYearEndBalance(groupYearEndBalance);
+                .setMemberMonthlyContributionIncrease(round(memberMonthlyContributionIncrease))
+                .setMemberYearlyContributionIncrease(round(memberMonthlyContributionIncrease * 12))
+                .setMemberTotalYearContrib(round(memberTotalYearContrib))
+                .setMemberYearEndBalance(round(memberYearEndBalance))
+                .setGroupMonthlyContributionIncrease(round(groupMonthlyContributionIncrease))
+                .setGroupYearlyContributionIncrease(round(groupMonthlyContributionIncrease * 12))
+                .setGroupTotalYearContrib(round(groupTotalYearContrib))
+                .setGroupYearEndBalance(round(groupYearEndBalance));
         
         lineChart.setHeader(new LineChartHeader()
                 .setName("Date")
@@ -391,5 +391,9 @@ public class MoreLikeThisService implements Serializable {
         }
 
         return returnCharts;
+    }
+
+    private static Double round(Double d) {
+        return (double)Math.round(d * 100) / 100;        
     }
 }

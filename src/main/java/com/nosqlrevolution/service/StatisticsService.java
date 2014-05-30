@@ -3,6 +3,8 @@ package com.nosqlrevolution.service;
 import com.nosqlrevolution.model.Chart;
 import com.nosqlrevolution.model.ChartValue;
 import com.nosqlrevolution.model.StatsValues;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,8 @@ import java.util.List;
  * @author cbrown
  */
 public class StatisticsService {
-
+    DecimalFormat df = new DecimalFormat("#################.##");
+    
     /**
      * Take one of the date charts and compute some statistics and projections from it.
      * 
@@ -26,13 +29,11 @@ public class StatisticsService {
         Double totalSum = 0.0D;
         Double sumLatestYear = 0.0D;
         int latestYearContributions = 0;
-        System.out.println("chartName=" + chart.getField());
         // First, sum up all of the values
         for (ChartValue value: chartValues) {
             Double sum = getSum(value.getChartValues());
             // Looking for the average per member.
             sum = sum/totalMembers;
-            System.out.println("sum=" + sum);
             monthlyAverages.add(new ChartValue(value.getName(), sum));
             totalSum += sum;
             
@@ -44,16 +45,13 @@ public class StatisticsService {
         }
         
         Double overallAverage = (chartValues.size() > 0) ? totalSum/chartValues.size() : 0.0D;
-            System.out.println("overallAverage=" + overallAverage);
         Double projectedYearEndTotalContribution = sumLatestYear + ((12 - latestYearContributions) * overallAverage);
-            System.out.println("sumLatestYear=" + sumLatestYear);
-            System.out.println("projectedYearEndTotalContribution=" + projectedYearEndTotalContribution);
-        
+
         return new StatsValues()
                 .setName(chart.getField().toString())
                 .setMonthlyAverages(monthlyAverages)
-                .setOverallAverage(overallAverage)
-                .setProjectedYearEndTotal(projectedYearEndTotalContribution);
+                .setOverallAverage(round(overallAverage))
+                .setProjectedYearEndTotal(round(projectedYearEndTotalContribution));
     }
     
     public static Double getSum(List<ChartValue> subValues) {
@@ -64,5 +62,9 @@ public class StatisticsService {
         }
         
         return 0.0D;
+    }
+
+    private static Double round(Double d) {
+        return (double)Math.round(d * 100) / 100;        
     }
 }
