@@ -78,8 +78,8 @@ public class LineChartPanel extends Composite {
 
     private Options createOptions() {
         Options options = Options.create();
-        options.setWidth(700);
-        options.setHeight(300);
+        options.setWidth(800);
+        options.setHeight(240);
 //        options.set3D(true);
 //        options.setTitle("My Daily Activities");
         return options;

@@ -2,6 +2,7 @@ package com.nosqlrevolution.waltermittyclient.client.charts;
 
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.nosqlrevolution.waltermittyclient.model.Chart;
 import com.nosqlrevolution.waltermittyclient.model.LineChart;
 import com.nosqlrevolution.waltermittyclient.model.SearchQuery;
 
@@ -26,33 +27,32 @@ public class ChartPanel extends FlowPanel {
     {
         clear();
 
-//        if (searchQuery != null && searchQuery.getCharts() != null) {
-//           for (Chart chart : searchQuery.getCharts()) {
-//                switch (chart.getChartType()){
-//                    case BAR:
-//                        BarChartPanel barChartPanel = new BarChartPanel(chart);
-//                        add(barChartPanel);
-//                        break;
-//                    case GEO:
-//                        GeoChartPanel geoChartPanel = new GeoChartPanel(chart);
-//                        add(geoChartPanel);
-//                        break;
-//                    case SCATTER:
-//                        break;
-//                    case LINE:
-////                        LineChartPanel lineChartPanel = new LineChartPanel(chart);
-////                        add(lineChartPanel);
-//                        break;
-//                }
-//            }
-//        }
-
         if (searchQuery != null && searchQuery.getLineChart() != null) {
             LineChart lineChart = searchQuery.getLineChart();
 
             LineChartPanel lineChartPanel = new LineChartPanel(lineChart);
             add(lineChartPanel);
+        }
 
+        if (searchQuery != null && searchQuery.getCharts() != null) {
+           for (Chart chart : searchQuery.getCharts()) {
+                switch (chart.getChartType()){
+                    case BAR:
+                        BarChartPanel barChartPanel = new BarChartPanel(chart);
+                        add(barChartPanel);
+                        break;
+                    case GEO:
+                        GeoChartPanel geoChartPanel = new GeoChartPanel(chart);
+                        add(geoChartPanel);
+                        break;
+                    case SCATTER:
+                        break;
+                    case LINE:
+//                        LineChartPanel lineChartPanel = new LineChartPanel(chart);
+//                        add(lineChartPanel);
+                        break;
+                }
+            }
         }
     }
 }

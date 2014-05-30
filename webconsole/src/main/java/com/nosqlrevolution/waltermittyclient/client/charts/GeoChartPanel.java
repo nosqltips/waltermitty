@@ -65,7 +65,7 @@ public class GeoChartPanel extends Composite {
 //        options.setTitle(chart.getName());
 
         options.setDataMode(GeoMap.DataMode.MARKERS);
-        options.setHeight(300);
+        options.setHeight(240);
         options.setWidth(450);
         options.setShowLegend(false);
         //options.setColors(0xFF8747, 0xFFB581, 0xc06000);
