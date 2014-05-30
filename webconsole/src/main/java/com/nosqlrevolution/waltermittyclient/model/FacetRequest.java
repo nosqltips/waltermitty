@@ -1,6 +1,5 @@
 package com.nosqlrevolution.waltermittyclient.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nosqlrevolution.waltermittyclient.enums.AggregationField;
 
@@ -11,7 +10,6 @@ import java.util.List;
  *
  * @author cbrown
  */
-@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class FacetRequest implements Serializable {
     // The field name we are faceting on.
     private AggregationField field;
@@ -19,7 +17,7 @@ public class FacetRequest implements Serializable {
     private int size = 10;
     // All of the rerned facets the user can choose from.
     private List<SelectableFacet> selectables;
-
+    
     public FacetRequest() {}
 
     public FacetRequest(AggregationField field) {
@@ -30,7 +28,7 @@ public class FacetRequest implements Serializable {
         this.field = field;
         this.size = size;
     }
-
+    
     @JsonProperty("field")
     public AggregationField getField() {
         return field;
@@ -41,12 +39,6 @@ public class FacetRequest implements Serializable {
         this.field = field;
         return this;
     }
-
-//    @JsonIgnore
-//    public FacetRequest setField(String fieldName) {
-//        this.field = AggregationField.valueOf(fieldName);
-//        return this;
-//    }
 
     @JsonProperty("size")
     public int getSize() {

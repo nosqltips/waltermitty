@@ -15,8 +15,9 @@ public class Member {
     private String zip;
     private String gender;
     private String birthYear;
+    private Integer birthYearNum;
     private String birthDecade;
-    private String age;
+    private Integer age;
     private Timestamp hsaEffectiveDate;
 
     private int numberOfDependents;
@@ -97,6 +98,16 @@ public class Member {
         this.birthYear = birthYear;
     }
 
+    @JsonProperty("birthYearNum")
+    public Integer getBirthYearNum() {
+        return birthYearNum;
+    }
+
+    @JsonProperty("birthYearNum")
+    public void setBirthYearNum(Integer birthYearNum) {
+        this.birthYearNum = birthYearNum;
+    }
+
     @JsonProperty("birthDecade")
     public String getBirthDecade() {
         return birthDecade;
@@ -108,12 +119,12 @@ public class Member {
     }
 
     @JsonProperty("age")
-    public String getAge() {
+    public Integer getAge() {
         return age;
     }
 
     @JsonProperty("age")
-    public void setAge(String age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

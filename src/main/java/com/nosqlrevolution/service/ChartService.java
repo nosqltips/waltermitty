@@ -17,9 +17,19 @@ public class ChartService implements Serializable {
     // TODO: can make this static
     public static List<ChartRequest> getCharts() {
         List<ChartRequest> chartRequests = new ArrayList<>();
-//            chartRequests.add(new ChartRequest(ChartField.BIRTH_YEAR, 10));
+            chartRequests.add(new ChartRequest(ChartField.BIRTH_YEAR, 10));
             chartRequests.add(new ChartRequest(ChartField.GENDER, 3));
-            chartRequests.add(new ChartRequest(ChartField.STATE, 52));
+            chartRequests.add(new ChartRequest(ChartField.STATE, 3));
+            chartRequests.add(new ChartRequest(ChartField.MEMBER_CONTRIBUTIONS));
+            chartRequests.add(new ChartRequest(ChartField.COMPANY_CONTRIBUTIONS));
+            chartRequests.add(new ChartRequest(ChartField.MEMBER_PAYMENTS));
+
+            return chartRequests;
+    }
+
+    // TODO: can make this static
+    public static List<ChartRequest> getMemberCharts() {
+        List<ChartRequest> chartRequests = new ArrayList<>();
             chartRequests.add(new ChartRequest(ChartField.MEMBER_CONTRIBUTIONS));
             chartRequests.add(new ChartRequest(ChartField.COMPANY_CONTRIBUTIONS));
             chartRequests.add(new ChartRequest(ChartField.MEMBER_PAYMENTS));

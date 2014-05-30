@@ -11,10 +11,10 @@ public enum BoostField {
     NUM_DEPENDENTS("Number of Dependents", 1.2F),
     NUM_CONTRIBUTIONS("Number of Contributions", 1.0F),
     NUM_PAYMENTS("Number of Payments", 1.0F),
+    NUM_CLAIMS("Number of Claims", 1.0F),
     TOTAL_PAYMENTS("Total Payments", 1.0F),
     TOTAL_CONTRIBUTIONS("Total Contributions and Payments", 1.0F),
     TOTAL_BALANCES("Total Balances", 1.0F),
-    NUM_CLAIMS("Number of Claims", 1.0F),
     TOTAL_CLAIMS("Total Claims", 1.0F),
     CPT_CODES_UNIQUE("CPT Codes Unique", 1.5F);   
     

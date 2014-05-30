@@ -11,15 +11,18 @@ curl -XPOST localhost:9200/member -d '{
             },
             "properties" : {
                 "balances" : {
+                    "type" : "nested",
                     "properties" : {
                         "cachedBalance" : {"type":"double"},
                         "newMemberID" : {"type":"long"}
                     }
                 },
                 "birthYear" : {"type":"string", "index":"not_analyzed"},
+                "birthYearNum" : {"type":"long"},
                 "birthDecade" : {"type":"string", "index":"not_analyzed"},
-                "age" : {"type":"string", "index":"not_analyzed"},
+                "age" : {"type":"long"},
                 "claims" : {
+                    "type" : "nested",
                     "properties" : {
                         "claimDetails" : {
                             "properties" : {
@@ -42,6 +45,7 @@ curl -XPOST localhost:9200/member -d '{
                     }
                 },
                 "contributionsAndPayments" : {
+                    "type" : "nested",
                     "properties" : {
                         "amount" : {"type":"double"},
                         "category" : {"type":"string", "index":"not_analyzed"},
@@ -50,6 +54,7 @@ curl -XPOST localhost:9200/member -d '{
                     }
                 },
                 "memberContributions" : {
+                    "type" : "nested",
                     "properties" : {
                         "amount" : {"type":"double"},
                         "category" : {"type":"string", "index":"not_analyzed"},
@@ -58,6 +63,7 @@ curl -XPOST localhost:9200/member -d '{
                     }
                 },
                 "memberPayments" : {
+                    "type" : "nested",
                     "properties" : {
                         "amount" : {"type":"double"},
                         "category" : {"type":"string", "index":"not_analyzed"},
@@ -66,6 +72,7 @@ curl -XPOST localhost:9200/member -d '{
                     }
                 },
                 "companyContributions" : {
+                    "type" : "nested",
                     "properties" : {
                         "amount" : {"type":"double"},
                         "category" : {"type":"string", "index":"not_analyzed"},
@@ -76,6 +83,7 @@ curl -XPOST localhost:9200/member -d '{
                 "cptCodesAll" : {"type":"string", "index":"not_analyzed"},
                 "cptCodesUnique" : {"type":"string", "index":"not_analyzed"},
                 "dependents" : {
+                    "type" : "nested",
                     "properties" : {
                         "birthYear" : {"type":"string", "index":"not_analyzed"},
                         "birthDecade" : {"type":"string", "index":"not_analyzed"},
