@@ -1,14 +1,19 @@
 package com.nosqlrevolution.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nosqlrevolution.enums.AggregationField;
+import static com.nosqlrevolution.enums.ChartType.LINE;
 import com.nosqlrevolution.enums.SearchField;
 import com.nosqlrevolution.model.BuilderModel;
 import static com.nosqlrevolution.model.BuilderModel.QueryType.QUERY;
 import com.nosqlrevolution.model.Chart;
+import com.nosqlrevolution.model.ChartValue;
+import com.nosqlrevolution.model.LineChart;
+import com.nosqlrevolution.model.LineChartHeader;
+import com.nosqlrevolution.model.LineChartValue;
 import com.nosqlrevolution.model.Result;
 import com.nosqlrevolution.model.SearchQuery;
+import com.nosqlrevolution.model.StatsValues;
 import com.nosqlrevolution.model.data.Member;
 import com.nosqlrevolution.util.AggregationUtil;
 import com.nosqlrevolution.util.ChartUtil;
@@ -24,7 +29,6 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.index.query.FilterBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
@@ -37,6 +41,9 @@ public class MoreLikeThisService implements Serializable {
     private static final Logger log = Logger.getLogger(MoreLikeThisService.class.getName());
     private final Client client = ClientService.getClient();
     private final ObjectMapper mapper = new ObjectMapper();
+    private final int totalMembers = 100;
+    private final Double yearlyContribLimit = 6450.0D;
+    private final Double monthlyContribLimit = 537.50D;
     
     public SearchQuery search(SearchQuery sq) {
         long startTime = System.currentTimeMillis();
@@ -62,22 +69,16 @@ public class MoreLikeThisService implements Serializable {
             return sq;
         }        
         
-        List<Chart> charts = null;
+        List<Chart> memberCharts = null;
         if (response.getAggregations() != null) {
-            charts = ChartUtil.parseCharts(response.getAggregations());
+            memberCharts = ChartUtil.parseCharts(response.getAggregations());
         }
 
-        try {
-            System.out.println(new ObjectMapper().writeValueAsString(charts));
-        } catch (JsonProcessingException ex) {
-            Logger.getLogger(MoreLikeThisService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         // *****************************************************************
         
         // Prepare custom MLT query. We'll build the sq object, then send to the regular search results.
         sq.setPageFrom(0);
-        sq.setPageSize(100);
+        sq.setPageSize(totalMembers);
         
         if (sq.getBoosts() == null) {
             sq.setBoosts(BoostService.getDefaultBoosts());
@@ -114,9 +115,14 @@ public class MoreLikeThisService implements Serializable {
             // Get the list of memberIds to constrain the aggregations.
             List<String> memberIds = getMemberIds(sq.getResults());
 
-            // Retrieve the chaarting data constrained to the list of returned matches.
-            List<Chart> compareCharts = chart(memberIds);
-            sq.setCharts(compareCharts);                    
+            // Retrieve the charting data constrained to the list of returned matches.
+            List<Chart> groupCharts = chart(memberIds);
+            
+            sq.setLineChart(generateLineChartDate(memberCharts, groupCharts, totalMembers));
+            
+            // Need to remove the line charts before adding
+//            sq.setCharts(groupCharts);
+            sq.setCharts(removeLineCharts(groupCharts));                    
             
             // Calculate the elapsed time of all of the calls.
             long elapsedTime = System.currentTimeMillis() - startTime;
@@ -194,6 +200,12 @@ public class MoreLikeThisService implements Serializable {
         return charts;
     }
 
+    /**
+     * Return a list of just the member Ids.
+     * 
+     * @param results
+     * @return 
+     */
     private List<String> getMemberIds(List<Result> results) {
         List<String> memberIds = new ArrayList<>();
         for (Result result: results) {
@@ -201,5 +213,214 @@ public class MoreLikeThisService implements Serializable {
         }
         
         return memberIds;
+    }
+
+    /**
+     * Generate all of the line chart data.
+     * 
+     * @param memberCharts
+     * @param groupCharts
+     * @param totalMembers 
+     */
+    private LineChart generateLineChartDate(List<Chart> memberCharts, List<Chart> groupCharts, int totalMembers) {
+        StatsValues memberMemberContrib = null;
+        StatsValues memberCompanyContrib = null;
+        StatsValues memberMemberPayments = null;
+
+        StatsValues groupMemberContrib = null;
+        StatsValues groupCompanyContrib = null;
+        StatsValues groupMemberPayments = null;
+        List<String> headers = null;
+        List<LineChartValue> lineChartValues = new ArrayList<>();
+        
+        System.out.println("number of MEMBER charts=" + memberCharts.size());
+        System.out.println("number of GROUP charts=" + groupCharts.size());
+        for (Chart chart: memberCharts) {
+            switch (chart.getField()) {
+                case MEMBER_CONTRIBUTIONS:
+                    memberMemberContrib = StatisticsService.calculateStats(chart, 1, "2014");
+                    break;
+                case COMPANY_CONTRIBUTIONS:
+                    memberCompanyContrib = StatisticsService.calculateStats(chart, 1, "2014");
+                    break;
+                case MEMBER_PAYMENTS:
+                    memberMemberPayments = StatisticsService.calculateStats(chart, 1, "2014");
+                    break;
+            }
+        }
+
+        for (Chart chart: groupCharts) {
+            switch (chart.getField()) {
+                case MEMBER_CONTRIBUTIONS:
+                    groupMemberContrib = StatisticsService.calculateStats(chart, totalMembers, "2014");
+                    // Get headers from this chart as all values should be populated.
+                    headers = generateHeaders(chart);
+                    break;
+                case COMPANY_CONTRIBUTIONS:
+                    groupCompanyContrib = StatisticsService.calculateStats(chart, totalMembers, "2014");
+                    break;
+                case MEMBER_PAYMENTS:
+                    groupMemberPayments = StatisticsService.calculateStats(chart, totalMembers, "2014");
+                    break;
+            }
+        }
+
+        lineChartValues.add(generateChartValues(memberMemberContrib, headers, "MEMBER_"));
+        lineChartValues.add(generateChartValues(memberCompanyContrib, headers, "MEMBER_"));
+        lineChartValues.add(generateChartValues(memberMemberPayments, headers, "MEMBER_"));
+        lineChartValues.add(generateChartValues(groupMemberContrib, headers, "GROUP_"));
+        lineChartValues.add(generateChartValues(groupCompanyContrib, headers, "GROUP_"));
+        lineChartValues.add(generateChartValues(groupMemberPayments, headers, "GROUP_"));
+
+        // Member calculations
+        Double memberTotalYearContrib = memberMemberContrib.getProjectedYearEndTotal() +
+                memberCompanyContrib.getProjectedYearEndTotal();
+        Double memberYearEndBalance = memberTotalYearContrib + memberMemberPayments.getProjectedYearEndTotal();
+        Double memberMonthlyContributionIncrease = (yearlyContribLimit - memberTotalYearContrib) / 12.0D;
+        if (memberMonthlyContributionIncrease < 0.0D) {
+            memberMonthlyContributionIncrease = 0.0D;
+        }
+
+        // Group calculations
+        Double groupTotalYearContrib = groupMemberContrib.getProjectedYearEndTotal() +
+                groupCompanyContrib.getProjectedYearEndTotal();
+        Double groupYearEndBalance = groupTotalYearContrib + groupMemberPayments.getProjectedYearEndTotal();
+        Double groupMonthlyContributionIncrease = (yearlyContribLimit - groupTotalYearContrib) / 12.0D;
+        if (groupMonthlyContributionIncrease < 0.0D) {
+            groupMonthlyContributionIncrease = 0.0D;
+        }
+        
+        LineChart lineChart = new LineChart()
+                .setMemberMonthlyContributionIncrease(round(memberMonthlyContributionIncrease))
+                .setMemberYearlyContributionIncrease(round(memberMonthlyContributionIncrease * 12))
+                .setMemberTotalYearContrib(round(memberTotalYearContrib))
+                .setMemberYearEndBalance(round(memberYearEndBalance))
+                .setGroupMonthlyContributionIncrease(round(groupMonthlyContributionIncrease))
+                .setGroupYearlyContributionIncrease(round(groupMonthlyContributionIncrease * 12))
+                .setGroupTotalYearContrib(round(groupTotalYearContrib))
+                .setGroupYearEndBalance(round(groupYearEndBalance));
+        
+        lineChart.setHeader(new LineChartHeader()
+                .setName("Date")
+                .setValues(headers)
+            );
+        
+        lineChartValues.add(
+                generateMonthlyContrib("MAX_MONTHLY_CONTRIB", headers, monthlyContribLimit)
+            );
+        
+        lineChart.setValues(lineChartValues);
+        
+//      function drawChart() {
+//        var data = google.visualization.arrayToDataTable([
+//          ['Year', 'Sales', 'Expenses'],
+//          ['2004',  1000,      400],
+//          ['2005',  1170,      460],
+//          ['2006',  660,       1120],
+//          ['2007',  1030,      540]
+//        ]);
+        
+        return lineChart;
+    }
+    
+    /**
+     * Get a list of the values that we'll use for the chart headers.
+     * 
+     * @param chart
+     * @return 
+     */
+    private List<String> generateHeaders(Chart chart) {
+        List<String> headers = new ArrayList<>();
+        for (ChartValue value: chart.getValues()) {
+            headers.add(value.getName());
+        }
+        
+        return headers;
+    }
+    
+    /**
+     * Generate the ChartValue that will be used to generate the chart.
+     * 
+     * @param chart
+     * @param headers
+     * @param prefix
+     * @return 
+     */
+    private LineChartValue generateChartValues(StatsValues statsValue, List<String> headers, String prefix) {
+        LineChartValue value = new LineChartValue();
+        value.setName(prefix + statsValue.getName());
+        
+        List<Double> values = new ArrayList<>();
+        
+        // Presumably all the header values are in order and this should enforce that order.
+        for (String header: headers) {
+            values.add(getValueFromStatsEntry(statsValue, header));
+        }
+        
+        value.setValues(values);
+        return value;
+    }
+
+    /**
+     * Generate the ChartValue using a static value.
+     * 
+     * @param chart
+     * @param headers
+     * @param prefix
+     * @return 
+     */
+    private LineChartValue generateMonthlyContrib(String name, List<String> headers, Double contrib) {
+        LineChartValue value = new LineChartValue();
+        value.setName(name);
+        
+        List<Double> values = new ArrayList<>();
+        
+        // Presumably all the header values are in order and this should enforce that order.
+        for (String header: headers) {
+            values.add(contrib);
+        }
+        
+        value.setValues(values);
+        return value;
+    }
+
+    /**
+     * Retrieve the correct chart entry or 0.0D if empty.
+     * 
+     * @param chart
+     * @param header
+     * @return 
+     */
+    private Double getValueFromStatsEntry(StatsValues statsValue, String header) {
+        if (statsValue.getMonthlyAverages() == null) { return 0.0D; }
+        
+        for (ChartValue value: statsValue.getMonthlyAverages()) {
+            if (value.getName().equals(header)) {
+                return value.getValue();
+            }
+        }
+        
+        return 0.0D;
+    }
+
+    /**
+     * We need to remove all of the LINE charts as we done something special with them.
+     * 
+     * @param charts
+     * @return 
+     */
+    private List<Chart> removeLineCharts(List<Chart> charts) {
+        List<Chart> returnCharts = new ArrayList<>();
+        for (Chart chart: charts) {
+            if (chart.getType() != LINE){
+                returnCharts.add(chart);
+            }
+        }
+
+        return returnCharts;
+    }
+
+    private static Double round(Double d) {
+        return (double)Math.round(d * 100) / 100;        
     }
 }
