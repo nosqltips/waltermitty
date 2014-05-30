@@ -3,7 +3,6 @@ package com.nosqlrevolution.waltermittyclient.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +20,10 @@ public class SearchQuery implements Serializable {
 
     private List<Result> results;
     private List<FacetRequest> facets;
+    private List<Chart> charts;
+    private List<Boost> boosts;
     
     public SearchQuery() {}
-    public SearchQuery(List<Result> results, List<FacetRequest> facets) {
-        this.results = results;
-        this.facets = facets;
-    }
 
     @JsonProperty("memberId")
     public String getMemberId() {
@@ -106,6 +103,26 @@ public class SearchQuery implements Serializable {
     @JsonProperty("facets")
     public void setFacets(List<FacetRequest> facets) {
         this.facets = facets;
+    }
+
+    @JsonProperty("charts")
+    public List<Chart> getCharts() {
+        return charts;
+    }
+
+    @JsonProperty("charts")
+    public void setCharts(List<Chart> charts) {
+        this.charts = charts;
+    }
+
+    @JsonProperty("boosts")
+    public List<Boost> getBoosts() {
+        return boosts;
+    }
+
+    @JsonProperty("boosts")
+    public void setBoosts(List<Boost> boosts) {
+        this.boosts = boosts;
     }
     
     @JsonIgnore

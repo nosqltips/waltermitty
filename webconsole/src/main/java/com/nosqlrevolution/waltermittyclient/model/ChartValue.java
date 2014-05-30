@@ -2,22 +2,22 @@ package com.nosqlrevolution.waltermittyclient.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.Serializable;
+import java.util.List;
 
 /**
  *
  * @author cbrown
  */
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
-public class SelectableFacet implements Comparable<SelectableFacet>, Serializable {
+public class ChartValue implements Comparable<ChartValue> {
     private String name;
     private Long count;
     private Double value;
-    private Boolean selected = Boolean.FALSE;
+    private List<ChartValue> chartValues;
     
-    public SelectableFacet() { }
+    public ChartValue() { }
     
-    public SelectableFacet(String name, long count) {
+    public ChartValue(String name, Long count) {
         this.name = name;
         this.count = count;
     }
@@ -28,7 +28,7 @@ public class SelectableFacet implements Comparable<SelectableFacet>, Serializabl
     }
 
     @JsonProperty("name")
-    public SelectableFacet setName(String name) {
+    public ChartValue setName(String name) {
         this.name = name;
         return this;
     }
@@ -39,7 +39,7 @@ public class SelectableFacet implements Comparable<SelectableFacet>, Serializabl
     }
 
     @JsonProperty("count")
-    public SelectableFacet setCount(Long count) {
+    public ChartValue setCount(Long count) {
         this.count = count;
         return this;
     }
@@ -50,24 +50,24 @@ public class SelectableFacet implements Comparable<SelectableFacet>, Serializabl
     }
 
     @JsonProperty("value")
-    public SelectableFacet setValue(Double value) {
+    public ChartValue setValue(Double value) {
         this.value = value;
         return this;
     }
 
-    @JsonProperty("selected")
-    public Boolean isSelected() {
-        return selected;
+    @JsonProperty("chartValues")
+    public List<ChartValue> getChartValues() {
+        return chartValues;
     }
 
-    @JsonProperty("selected")
-    public SelectableFacet setSelected(Boolean selected) {
-        this.selected = selected;
+    @JsonProperty("chartValues")
+    public ChartValue setChartValues(List<ChartValue> chartValues) {
+        this.chartValues = chartValues;
         return this;
     }
     
     @Override
-    public int compareTo(SelectableFacet o) {
+    public int compareTo(ChartValue o) {
         return (o.getName().compareTo(name));
     }
 }
