@@ -43,7 +43,7 @@ public class MoreLikeThisService implements Serializable {
     private final ObjectMapper mapper = new ObjectMapper();
     private final int totalMembers = 100;
     private final Double yearlyContribLimit = 6450.0D;
-    private final Double monthlyContribLimit = yearlyContribLimit/12.0D;
+    private final Double monthlyContribLimit = 537.50D;
     
     public SearchQuery search(SearchQuery sq) {
         long startTime = System.currentTimeMillis();
@@ -305,6 +305,10 @@ public class MoreLikeThisService implements Serializable {
                 .setValues(headers)
             );
         
+        lineChartValues.add(
+                generateMonthlyContrib("MAX_MONTHLY_CONTRIB", headers, monthlyContribLimit)
+            );
+        
         lineChart.setValues(lineChartValues);
         
 //      function drawChart() {
@@ -351,6 +355,29 @@ public class MoreLikeThisService implements Serializable {
         // Presumably all the header values are in order and this should enforce that order.
         for (String header: headers) {
             values.add(getValueFromStatsEntry(statsValue, header));
+        }
+        
+        value.setValues(values);
+        return value;
+    }
+
+    /**
+     * Generate the ChartValue using a static value.
+     * 
+     * @param chart
+     * @param headers
+     * @param prefix
+     * @return 
+     */
+    private LineChartValue generateMonthlyContrib(String name, List<String> headers, Double contrib) {
+        LineChartValue value = new LineChartValue();
+        value.setName(name);
+        
+        List<Double> values = new ArrayList<>();
+        
+        // Presumably all the header values are in order and this should enforce that order.
+        for (String header: headers) {
+            values.add(contrib);
         }
         
         value.setValues(values);
