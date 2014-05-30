@@ -65,14 +65,25 @@ public class LineChartPanel extends Composite {
 
         initWidget(hp);
 
-        infoPanel.add(new Label(lineChart.getMemberMonthlyContributionIncrease().toString()));
-        infoPanel.add(new Label(lineChart.getGroupTotalYearContrib().toString()));
-        infoPanel.add(new Label(lineChart.getGroupYearEndBalance().toString()));
-        infoPanel.add(new Label(lineChart.getGroupYearlyContributionIncrease().toString()));
-        infoPanel.add(new Label(lineChart.getMemberMonthlyContributionIncrease().toString()));
+        // Member
+        infoPanel.add(new Label("Member Total Year Contrib"));
         infoPanel.add(new Label(lineChart.getMemberTotalYearContrib().toString()));
+        infoPanel.add(new Label("Member Year Ending Balance"));
         infoPanel.add(new Label(lineChart.getMemberYearEndBalance().toString()));
+        infoPanel.add(new Label("Member Monthly Contribution Increase"));
+        infoPanel.add(new Label(lineChart.getMemberMonthlyContributionIncrease().toString()));
+        infoPanel.add(new Label("Member Yearly Contribution Increase"));
         infoPanel.add(new Label(lineChart.getMemberYearlyContributionIncrease().toString()));
+
+        // Group
+        infoPanel.add(new Label("Group Total Year Contrib"));
+        infoPanel.add(new Label(lineChart.getGroupTotalYearContrib().toString()));
+        infoPanel.add(new Label("Group Year Ending Balance"));
+        infoPanel.add(new Label(lineChart.getGroupYearEndBalance().toString()));
+        infoPanel.add(new Label("Group Monthly Contribution Increase"));
+        infoPanel.add(new Label(lineChart.getMemberMonthlyContributionIncrease().toString()));
+        infoPanel.add(new Label("Group Yearly Contribution Increase"));
+        infoPanel.add(new Label(lineChart.getGroupYearlyContributionIncrease().toString()));
 
 //
         // Create a callback to be called when the visualization API
@@ -96,10 +107,10 @@ public class LineChartPanel extends Composite {
 
     private Options createOptions() {
         Options options = Options.create();
-        options.setWidth(800);
-        options.setHeight(240);
+        options.setWidth(1000);
+        options.setHeight(600);
 //        options.set3D(true);
-//        options.setTitle("My Daily Activities");
+        options.setTitle("Member Activities");
         return options;
     }
 
