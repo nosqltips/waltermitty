@@ -6,6 +6,8 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.visualization.client.AbstractDataTable;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.Selection;
@@ -22,7 +24,8 @@ import java.util.List;
  * Created by noSqlOrBust on 5/30/2014.
  */
 public class LineChartPanel extends Composite {
-
+    private HorizontalPanel hp;
+    private FlowPanel infoPanel;
     private FlowPanel panel;
     private com.nosqlrevolution.waltermittyclient.model.LineChart lineChartModel;
 
@@ -52,9 +55,24 @@ public class LineChartPanel extends Composite {
     public LineChartPanel(com.nosqlrevolution.waltermittyclient.model.LineChart lineChart) {
         this.lineChartModel = lineChart;
 
+        hp = new HorizontalPanel();
         panel = new FlowPanel();
         panel.setStyleName("barChartPanel");
-        initWidget(panel);
+        hp.add(panel);
+
+        infoPanel = new FlowPanel();
+        hp.add(infoPanel);
+
+        initWidget(hp);
+
+        infoPanel.add(new Label(lineChart.getMemberMonthlyContributionIncrease().toString()));
+        infoPanel.add(new Label(lineChart.getGroupTotalYearContrib().toString()));
+        infoPanel.add(new Label(lineChart.getGroupYearEndBalance().toString()));
+        infoPanel.add(new Label(lineChart.getGroupYearlyContributionIncrease().toString()));
+        infoPanel.add(new Label(lineChart.getMemberMonthlyContributionIncrease().toString()));
+        infoPanel.add(new Label(lineChart.getMemberTotalYearContrib().toString()));
+        infoPanel.add(new Label(lineChart.getMemberYearEndBalance().toString()));
+        infoPanel.add(new Label(lineChart.getMemberYearlyContributionIncrease().toString()));
 
 //
         // Create a callback to be called when the visualization API
