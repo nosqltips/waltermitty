@@ -178,7 +178,7 @@ public class MoreLikeThisService implements Serializable {
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryUtil.getTermsBuilder(SearchField.MEMBER_ID.getName(), memberIds))
                 .setFrom(0)
-                .setSize(100);
+                .setSize(0);
         
         // Add all Aggregations
         List<AbstractAggregationBuilder> aggBuilders = ChartUtil.addAllCharts(ChartService.getCharts());
@@ -191,7 +191,6 @@ public class MoreLikeThisService implements Serializable {
         
         SearchResponse response = builder.execute().actionGet();
         
-        System.out.println("chart response=" + response.getHits().getTotalHits()); 
         List<Chart> charts = null;
         if (response.getAggregations() != null) {
             charts = ChartUtil.parseCharts(response.getAggregations());
@@ -233,10 +232,8 @@ public class MoreLikeThisService implements Serializable {
         List<String> headers = null;
         List<LineChartValue> lineChartValues = new ArrayList<>();
         
-        System.out.println("number of MEMBER charts=" + memberCharts.size());
-        System.out.println("number of GROUP charts=" + groupCharts.size());
         for (Chart chart: memberCharts) {
-            switch (chart.getField()) {
+            switch (chart.getChartField()) {
                 case MEMBER_CONTRIBUTIONS:
                     memberMemberContrib = StatisticsService.calculateStats(chart, 1, "2014");
                     break;
@@ -250,7 +247,7 @@ public class MoreLikeThisService implements Serializable {
         }
 
         for (Chart chart: groupCharts) {
-            switch (chart.getField()) {
+            switch (chart.getChartField()) {
                 case MEMBER_CONTRIBUTIONS:
                     groupMemberContrib = StatisticsService.calculateStats(chart, totalMembers, "2014");
                     // Get headers from this chart as all values should be populated.
@@ -331,7 +328,7 @@ public class MoreLikeThisService implements Serializable {
      */
     private List<String> generateHeaders(Chart chart) {
         List<String> headers = new ArrayList<>();
-        for (ChartValue value: chart.getValues()) {
+        for (ChartValue value: chart.getChartValues()) {
             headers.add(value.getName());
         }
         
@@ -412,7 +409,7 @@ public class MoreLikeThisService implements Serializable {
     private List<Chart> removeLineCharts(List<Chart> charts) {
         List<Chart> returnCharts = new ArrayList<>();
         for (Chart chart: charts) {
-            if (chart.getType() != LINE){
+            if (chart.getChartType() != LINE){
                 returnCharts.add(chart);
             }
         }
