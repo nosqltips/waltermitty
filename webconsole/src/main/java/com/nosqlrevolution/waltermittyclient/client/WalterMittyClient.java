@@ -55,7 +55,7 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
 //    private Label errorLabel;
     private CenterPanelContainerPanel centerPanelContainerPanel;
     //    private Label errorLabel;
-//    private SliderVerticalPanelPanel sliderVerticalPanelPanel;
+    private SliderVerticalPanelPanel sliderVerticalPanelPanel;
 
 
     /**
@@ -77,7 +77,7 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
 
 //        p.addEast(new HTML("east"), 2);
         westPanel = new WestPanel();
-//        p.addWest(westPanel, 20);
+        p.addWest(westPanel, 20);
 
         centerTabPanel = new TabLayoutPanel(1.5, Style.Unit.EM);
         centerTabPanel.addStyleName("mitty-TabLayoutPanelTab");
@@ -121,12 +121,12 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
         // We can add style names to widgets
         sendButton.addStyleName("sendButton");
 
-//        HorizontalPanel hp = new HorizontalPanel();
-//        hp.add(nameField);
-//        hp.add(sendButton);
-////        hp.add(errorLabel);
-//        hp.setStyleName("westPanelTopPanel");
-//        westPanel.add(hp);
+        HorizontalPanel hp = new HorizontalPanel();
+        hp.add(nameField);
+        hp.add(sendButton);
+//        hp.add(errorLabel);
+        hp.setStyleName("westPanelTopPanel");
+        westPanel.add(hp);
 
         westPanelContainer.getElement().setId("westPanelVertContainer");
         westPanelContainer.setStyleName("westPanelVertContainer");
@@ -136,9 +136,9 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
 //        facetContainer.getElement().setId("facetContainer");
 //        facetContainer.setStyleName("facetContainer");
 
-//        sliderVerticalPanelPanel = new SliderVerticalPanelPanel();
-//        facetScrollContainer.add(sliderVerticalPanelPanel);
-//        facetScrollContainer.setStyleName("facetScrollContainer");
+        sliderVerticalPanelPanel = new SliderVerticalPanelPanel();
+        facetScrollContainer.add(sliderVerticalPanelPanel);
+        facetScrollContainer.setStyleName("facetScrollContainer");
         westPanel.add(westPanelContainer);
 //
 //        westPanel.add(hp);
@@ -329,7 +329,7 @@ public class WalterMittyClient implements EntryPoint, ClickHandler, KeyUpHandler
                 }
 
                 WalterMittyClient.this.searchQuery = searchQuery;
-//                sliderVerticalPanelPanel.update(searchQuery.getBoosts());
+                sliderVerticalPanelPanel.update(searchQuery.getBoosts());
 
                 // Update center panel
                 centerPanelContainerPanel.update(searchQuery);
