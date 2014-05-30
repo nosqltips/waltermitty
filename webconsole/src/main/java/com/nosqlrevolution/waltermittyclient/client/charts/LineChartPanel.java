@@ -56,8 +56,10 @@ public class LineChartPanel extends Composite {
         this.lineChartModel = lineChart;
 
         hp = new HorizontalPanel();
+
+        hp.setStyleName("lineChartPanelHorizonatalPanel");
         panel = new FlowPanel();
-        panel.setStyleName("barChartPanel");
+        panel.setStyleName("lineChartPanel");
         hp.add(panel);
 
         infoPanel = new FlowPanel();
@@ -65,16 +67,18 @@ public class LineChartPanel extends Composite {
 
         initWidget(hp);
 
-        infoPanel.add(new Label("MemberMonthlyContributionIncrease: " + lineChart.getMemberMonthlyContributionIncrease().toString()));
-        infoPanel.add(new Label("MemberMonthlyContributionIncrease: " + lineChart.getMemberMonthlyContributionIncrease().toString()));
-        infoPanel.add(new Label("MemberTotalYearContrib: " + lineChart.getMemberTotalYearContrib().toString()));
-        infoPanel.add(new Label("MemberYearEndBalance: " + lineChart.getMemberYearEndBalance().toString()));
-        infoPanel.add(new Label("MemberYearlyContributionIncrease: " + lineChart.getMemberYearlyContributionIncrease().toString()));
-        infoPanel.add(new Label("GroupTotalYearContrib: " + lineChart.getGroupTotalYearContrib().toString()));
-        infoPanel.add(new Label("GroupYearEndBalance: " + lineChart.getGroupYearEndBalance().toString()));
-        infoPanel.add(new Label("GroupYearlyContributionIncrease: " + lineChart.getGroupYearlyContributionIncrease().toString()));
+        // Member
+        infoPanel.add(new Label("Member Total Year Contrib: " + lineChart.getMemberTotalYearContrib().toString()));
+        infoPanel.add(new Label("Member Year Ending Balance: " + lineChart.getMemberYearEndBalance().toString()));
+        infoPanel.add(new Label("Member Monthly Contribution Increase: " + lineChart.getMemberMonthlyContributionIncrease().toString()));
+        infoPanel.add(new Label("Member Yearly Contribution Increase: " + lineChart.getMemberYearlyContributionIncrease().toString()));
 
-//
+        // Group
+        infoPanel.add(new Label("Group Total Year Contrib: " + lineChart.getGroupTotalYearContrib().toString()));
+        infoPanel.add(new Label("Group Year Ending Balance: " + lineChart.getGroupYearEndBalance().toString()));
+        infoPanel.add(new Label("Group Monthly Contribution Increase: " + lineChart.getMemberMonthlyContributionIncrease().toString()));
+        infoPanel.add(new Label("Group Yearly Contribution Increase: " + lineChart.getGroupYearlyContributionIncrease().toString()));
+
         // Create a callback to be called when the visualization API
         // has been loaded.
         Runnable onLoadCallback = new Runnable() {
@@ -96,10 +100,10 @@ public class LineChartPanel extends Composite {
 
     private Options createOptions() {
         Options options = Options.create();
-        options.setWidth(800);
-        options.setHeight(240);
+        options.setWidth(1000);
+        options.setHeight(600);
 //        options.set3D(true);
-//        options.setTitle("My Daily Activities");
+        options.setTitle("Member Activities");
         return options;
     }
 
