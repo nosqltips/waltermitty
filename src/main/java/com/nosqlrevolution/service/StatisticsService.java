@@ -13,8 +13,6 @@ import java.util.List;
  * @author cbrown
  */
 public class StatisticsService {
-    DecimalFormat df = new DecimalFormat("#################.##");
-    
     /**
      * Take one of the date charts and compute some statistics and projections from it.
      * 
