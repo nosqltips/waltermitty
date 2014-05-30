@@ -22,6 +22,11 @@ public class ChartValue implements Comparable<ChartValue> {
         this.count = count;
     }
     
+    public ChartValue(String name, Double value) {
+        this.name = name;
+        this.value = value;
+    }
+    
     @JsonProperty("name")
     public String getName() {
         return name;

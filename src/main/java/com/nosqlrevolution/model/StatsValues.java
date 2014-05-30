@@ -13,7 +13,7 @@ public class StatsValues {
     private String name;
     private Double overallAverage = 0.0D;
     private Double projectedYearEndTotal = 0.0D;
-    private List<Double> monthlyAverages;
+    private List<ChartValue> monthlyAverages;
     
     public StatsValues() { }
     
@@ -51,12 +51,12 @@ public class StatsValues {
     }
 
     @JsonProperty("monthlyAverages")
-    public List<Double> getMonthlyAverages() {
+    public List<ChartValue> getMonthlyAverages() {
         return monthlyAverages;
     }
 
     @JsonProperty("monthlyAverages")
-    public StatsValues setMonthlyAverages(List<Double> monthlyAverages) {
+    public StatsValues setMonthlyAverages(List<ChartValue> monthlyAverages) {
         this.monthlyAverages = monthlyAverages;
         return this;
     }

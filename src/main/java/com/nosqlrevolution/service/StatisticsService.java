@@ -20,17 +20,20 @@ public class StatisticsService {
      * @param latestYear 
      * @return  
      */
-    public static StatsValues calculateStats(Chart chart, int totalMembers, String latestYear) {
+    public static StatsValues calculateStats(Chart chart, double totalMembers, String latestYear) {
         List<ChartValue> chartValues = chart.getValues();
-        List<Double> monthlyAverages = new ArrayList<>();
+        List<ChartValue> monthlyAverages = new ArrayList<>();
         Double totalSum = 0.0D;
         Double sumLatestYear = 0.0D;
         int latestYearContributions = 0;
-        
+        System.out.println("chartName=" + chart.getField());
         // First, sum up all of the values
         for (ChartValue value: chartValues) {
             Double sum = getSum(value.getChartValues());
-            monthlyAverages.add(sum/totalMembers);
+            // Looking for the average per member.
+            sum = sum/totalMembers;
+            System.out.println("sum=" + sum);
+            monthlyAverages.add(new ChartValue(value.getName(), sum));
             totalSum += sum;
             
             // Look for the 2014 values and sum
@@ -41,10 +44,13 @@ public class StatisticsService {
         }
         
         Double overallAverage = (chartValues.size() > 0) ? totalSum/chartValues.size() : 0.0D;
-        Double projectedYearEndTotalContribution = sumLatestYear * ((12 - latestYearContributions) * overallAverage);
+            System.out.println("overallAverage=" + overallAverage);
+        Double projectedYearEndTotalContribution = sumLatestYear + ((12 - latestYearContributions) * overallAverage);
+            System.out.println("sumLatestYear=" + sumLatestYear);
+            System.out.println("projectedYearEndTotalContribution=" + projectedYearEndTotalContribution);
         
         return new StatsValues()
-                .setName(chart.getName())
+                .setName(chart.getField().toString())
                 .setMonthlyAverages(monthlyAverages)
                 .setOverallAverage(overallAverage)
                 .setProjectedYearEndTotal(projectedYearEndTotalContribution);

@@ -16,9 +16,11 @@ public class LineChart implements Serializable {
     private Double memberTotalYearContrib;
     private Double memberYearEndBalance;
     private Double memberMonthlyContributionIncrease;
+    private Double memberYearlyContributionIncrease;
     private Double groupTotalYearContrib;
     private Double groupYearEndBalance;
     private Double groupMonthlyContributionIncrease;
+    private Double groupYearlyContributionIncrease;
     
     public LineChart() { }
     
@@ -77,6 +79,17 @@ public class LineChart implements Serializable {
         return this;
     }
 
+    @JsonProperty("memberYearlyContributionIncrease")
+    public Double getMemberYearlyContributionIncrease() {
+        return memberYearlyContributionIncrease;
+    }
+
+    @JsonProperty("memberYearlyContributionIncrease")
+    public LineChart setMemberYearlyContributionIncrease(Double memberYearlyContributionIncrease) {
+        this.memberYearlyContributionIncrease = memberYearlyContributionIncrease;
+        return this;
+    }
+
     @JsonProperty("groupTotalYearContrib")
     public Double getGroupTotalYearContrib() {
         return groupTotalYearContrib;
@@ -107,6 +120,17 @@ public class LineChart implements Serializable {
     @JsonProperty("groupMonthlyContributionIncrease")
     public LineChart setGroupMonthlyContributionIncrease(Double groupMonthlyContributionIncrease) {
         this.groupMonthlyContributionIncrease = groupMonthlyContributionIncrease;
+        return this;
+    }
+
+    @JsonProperty("groupYearlyContributionIncrease")
+    public Double getGroupYearlyContributionIncrease() {
+        return groupYearlyContributionIncrease;
+    }
+
+    @JsonProperty("groupYearlyContributionIncrease")
+    public LineChart setGroupYearlyContributionIncrease(Double groupYearlyContributionIncrease) {
+        this.groupYearlyContributionIncrease = groupYearlyContributionIncrease;
         return this;
     }
 }

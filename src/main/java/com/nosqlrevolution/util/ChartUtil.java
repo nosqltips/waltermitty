@@ -145,10 +145,14 @@ public class ChartUtil {
                         );
                     break;
                 case COMPANY_CONTRIBUTIONS:
-                    chartBuilders.add(getDateHistogramWithStats(request.getField(), ChartField.COMPANY_CONTRIBUTIONS_AMOUNT, Interval.MONTH));
+                    chartBuilders.add(getNested(request.getField(), request.getField().getNested(),
+                            getDateHistogramWithStats(request.getField(), ChartField.COMPANY_CONTRIBUTIONS_AMOUNT, Interval.MONTH))
+                        );
                     break;
                 case MEMBER_PAYMENTS:
-                    chartBuilders.add(getDateHistogramWithStats(request.getField(), ChartField.MEMBER_PAYMENTS_AMOUNT, Interval.MONTH));
+                    chartBuilders.add(getNested(request.getField(), request.getField().getNested(),
+                            getDateHistogramWithStats(request.getField(), ChartField.MEMBER_PAYMENTS_AMOUNT, Interval.MONTH))
+                        );
                     break;
             }
         }

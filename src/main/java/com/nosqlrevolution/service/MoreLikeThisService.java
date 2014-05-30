@@ -42,6 +42,8 @@ public class MoreLikeThisService implements Serializable {
     private final Client client = ClientService.getClient();
     private final ObjectMapper mapper = new ObjectMapper();
     private final int totalMembers = 100;
+    private final Double yearlyContribLimit = 6450.0D;
+    private final Double monthlyContribLimit = yearlyContribLimit/12.0D;
     
     public SearchQuery search(SearchQuery sq) {
         long startTime = System.currentTimeMillis();
@@ -119,7 +121,8 @@ public class MoreLikeThisService implements Serializable {
             sq.setLineChart(generateLineChartDate(memberCharts, groupCharts, totalMembers));
             
             // Need to remove the line charts before adding
-            sq.setCharts(removeLineCharts(groupCharts));                    
+            sq.setCharts(groupCharts);
+//            sq.setCharts(removeLineCharts(groupCharts));                    
             
             // Calculate the elapsed time of all of the calls.
             long elapsedTime = System.currentTimeMillis() - startTime;
@@ -230,14 +233,19 @@ public class MoreLikeThisService implements Serializable {
         List<String> headers = null;
         List<LineChartValue> lineChartValues = new ArrayList<>();
         
+        System.out.println("number of MEMBER charts=" + memberCharts.size());
+        System.out.println("number of GROUP charts=" + groupCharts.size());
         for (Chart chart: memberCharts) {
             switch (chart.getField()) {
                 case MEMBER_CONTRIBUTIONS:
-                    memberMemberContrib = StatisticsService.calculateStats(chart, totalMembers, "2014");
+                    memberMemberContrib = StatisticsService.calculateStats(chart, 1, "2014");
+                    break;
                 case COMPANY_CONTRIBUTIONS:
-                    memberCompanyContrib = StatisticsService.calculateStats(chart, totalMembers, "2014");
+                    memberCompanyContrib = StatisticsService.calculateStats(chart, 1, "2014");
+                    break;
                 case MEMBER_PAYMENTS:
-                    memberMemberPayments = StatisticsService.calculateStats(chart, totalMembers, "2014");
+                    memberMemberPayments = StatisticsService.calculateStats(chart, 1, "2014");
+                    break;
             }
         }
 
@@ -247,31 +255,28 @@ public class MoreLikeThisService implements Serializable {
                     groupMemberContrib = StatisticsService.calculateStats(chart, totalMembers, "2014");
                     // Get headers from this chart as all values should be populated.
                     headers = generateHeaders(chart);
+                    break;
                 case COMPANY_CONTRIBUTIONS:
                     groupCompanyContrib = StatisticsService.calculateStats(chart, totalMembers, "2014");
+                    break;
                 case MEMBER_PAYMENTS:
                     groupMemberPayments = StatisticsService.calculateStats(chart, totalMembers, "2014");
+                    break;
             }
         }
 
-        // We have to do this here because we need the header values to pass in.
-        for (Chart chart: memberCharts) {
-            lineChartValues.add(
-                    generateChartValues(chart, headers, "MEMBER_")
-                    );
-        }
-
-        for (Chart chart: groupCharts) {
-            lineChartValues.add(
-                    generateChartValues(chart, headers, "GROUP_")
-                    );
-        }
+        lineChartValues.add(generateChartValues(memberMemberContrib, headers, "MEMBER_"));
+        lineChartValues.add(generateChartValues(memberCompanyContrib, headers, "MEMBER_"));
+        lineChartValues.add(generateChartValues(memberMemberPayments, headers, "MEMBER_"));
+        lineChartValues.add(generateChartValues(groupMemberContrib, headers, "GROUP_"));
+        lineChartValues.add(generateChartValues(groupCompanyContrib, headers, "GROUP_"));
+        lineChartValues.add(generateChartValues(groupMemberPayments, headers, "GROUP_"));
 
         // Member calculations
         Double memberTotalYearContrib = memberMemberContrib.getProjectedYearEndTotal() +
                 memberCompanyContrib.getProjectedYearEndTotal();
-        Double memberYearEndBalance = memberTotalYearContrib - memberMemberPayments.getProjectedYearEndTotal();
-        Double memberMonthlyContributionIncrease = 6450.0D - memberTotalYearContrib;
+        Double memberYearEndBalance = memberTotalYearContrib + memberMemberPayments.getProjectedYearEndTotal();
+        Double memberMonthlyContributionIncrease = (yearlyContribLimit - memberTotalYearContrib) / 12.0D;
         if (memberMonthlyContributionIncrease < 0.0D) {
             memberMonthlyContributionIncrease = 0.0D;
         }
@@ -279,17 +284,19 @@ public class MoreLikeThisService implements Serializable {
         // Group calculations
         Double groupTotalYearContrib = groupMemberContrib.getProjectedYearEndTotal() +
                 groupCompanyContrib.getProjectedYearEndTotal();
-        Double groupYearEndBalance = groupTotalYearContrib - groupMemberPayments.getProjectedYearEndTotal();
-        Double groupMonthlyContributionIncrease = 6450.0D - groupTotalYearContrib;
+        Double groupYearEndBalance = groupTotalYearContrib + groupMemberPayments.getProjectedYearEndTotal();
+        Double groupMonthlyContributionIncrease = (yearlyContribLimit - groupTotalYearContrib) / 12.0D;
         if (groupMonthlyContributionIncrease < 0.0D) {
             groupMonthlyContributionIncrease = 0.0D;
         }
         
         LineChart lineChart = new LineChart()
                 .setMemberMonthlyContributionIncrease(memberMonthlyContributionIncrease)
+                .setMemberYearlyContributionIncrease(memberMonthlyContributionIncrease * 12)
                 .setMemberTotalYearContrib(memberTotalYearContrib)
                 .setMemberYearEndBalance(memberYearEndBalance)
                 .setGroupMonthlyContributionIncrease(groupMonthlyContributionIncrease)
+                .setGroupYearlyContributionIncrease(groupMonthlyContributionIncrease * 12)
                 .setGroupTotalYearContrib(groupTotalYearContrib)
                 .setGroupYearEndBalance(groupYearEndBalance);
         
@@ -335,15 +342,15 @@ public class MoreLikeThisService implements Serializable {
      * @param prefix
      * @return 
      */
-    private LineChartValue generateChartValues(Chart chart, List<String> headers, String prefix) {
+    private LineChartValue generateChartValues(StatsValues statsValue, List<String> headers, String prefix) {
         LineChartValue value = new LineChartValue();
-        value.setName(prefix + chart.getName());
+        value.setName(prefix + statsValue.getName());
         
         List<Double> values = new ArrayList<>();
         
         // Presumably all the header values are in order and this should enforce that order.
         for (String header: headers) {
-            values.add(getValueFromChartEntry(chart, header));
+            values.add(getValueFromStatsEntry(statsValue, header));
         }
         
         value.setValues(values);
@@ -357,10 +364,10 @@ public class MoreLikeThisService implements Serializable {
      * @param header
      * @return 
      */
-    private Double getValueFromChartEntry(Chart chart, String header) {
-        if (chart.getValues() == null) { return 0.0D; }
+    private Double getValueFromStatsEntry(StatsValues statsValue, String header) {
+        if (statsValue.getMonthlyAverages() == null) { return 0.0D; }
         
-        for (ChartValue value: chart.getValues()) {
+        for (ChartValue value: statsValue.getMonthlyAverages()) {
             if (value.getName().equals(header)) {
                 return value.getValue();
             }
