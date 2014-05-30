@@ -1,7 +1,9 @@
 package com.nosqlrevolution.waltermittyclient.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class Count {
     private long count;
 

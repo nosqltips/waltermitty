@@ -11,44 +11,25 @@ import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.Selection;
 import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.events.SelectHandler;
-import com.google.gwt.visualization.client.visualizations.corechart.BarChart;
-import com.google.gwt.visualization.client.visualizations.corechart.Options;
+import com.google.gwt.visualization.client.visualizations.GeoMap;
+import com.google.gwt.visualization.client.visualizations.GeoMap.Options;
 import com.nosqlrevolution.waltermittyclient.model.Chart;
-import com.nosqlrevolution.waltermittyclient.model.ChartValue;
 import com.nosqlrevolution.waltermittyclient.model.Result;
 
+//import com.google.gwt.visualization.client.visualizations.corechart.BarChart;
+
 /**
- * Created by noSqlOrBust on 5/24/2014.
+ * Created by noSqlOrBust on 5/29/2014.
  */
-public class BarChartPanel extends Composite {
+public class GeoChartPanel extends Composite {
 
     private FlowPanel panel;
     private Chart chart;
 
-    public BarChartPanel() {
-//        panel = new FlowPanel();
-//        panel.setStyleName("barChartPanel");
-//        initWidget(panel);
-//
-//
-//        // Create a callback to be called when the visualization API
-//        // has been loaded.
-//        Runnable onLoadCallback = new Runnable() {
-//            public void run() {
-//                // Create a BarChart chart visualization.
-//                BarChart bar = new BarChart(createTable(), createOptions());
-//
-//                bar.addSelectHandler(createSelectHandler(bar));
-//                panel.add(bar);
-//            }
-//        };
-//
-//        // Load the visualization api, passing the onLoadCallback to be called
-//        // when loading is done.
-//        VisualizationUtils.loadVisualizationApi(onLoadCallback, BarChart.PACKAGE);
+    public GeoChartPanel() {
     }
 
-    public BarChartPanel(Chart chart) {
+    public GeoChartPanel(Chart chart) {
         this.chart = chart;
 
         panel = new FlowPanel();
@@ -64,29 +45,35 @@ public class BarChartPanel extends Composite {
             public void run() {
                 // Create a BarChart chart visualization.
                 AbstractDataTable chartDataTable = createChartDataTable();
-                BarChart bar = new BarChart(chartDataTable, createOptions());
-                bar.setTitle(BarChartPanel.this.chart.getName());
-
-                bar.addSelectHandler(createSelectHandler(bar));
-                panel.add(bar);
+                GeoMap geo = new GeoMap(chartDataTable, createOptions());
+//
+//                bar.addSelectHandler(createSelectHandler(bar));
+                panel.add(geo);
             }
         };
 
         // Load the visualization api, passing the onLoadCallback to be called
         // when loading is done.
-        VisualizationUtils.loadVisualizationApi(onLoadCallback, BarChart.PACKAGE);
+        VisualizationUtils.loadVisualizationApi(onLoadCallback, GeoMap.PACKAGE);
     }
 
     private Options createOptions() {
         Options options = Options.create();
-        options.setWidth(300);
-        options.setHeight(180);
+//        options.setWidth(400);
+//        options.setHeight(240);
 //        options.set3D(true);
-        options.setTitle(chart.getName());
+//        options.setTitle(chart.getName());
+
+        options.setDataMode(GeoMap.DataMode.MARKERS);
+        options.setHeight(300);
+        options.setWidth(450);
+        options.setShowLegend(false);
+        //options.setColors(0xFF8747, 0xFFB581, 0xc06000);
+        options.setRegion("US");
         return options;
     }
 
-    private SelectHandler createSelectHandler(final BarChart chart) {
+    private SelectHandler createSelectHandler(final GeoMap chart) {
         return new SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
@@ -117,7 +104,7 @@ public class BarChartPanel extends Composite {
                         message += "row " + row + " selected";
                     } else {
                         // unreachable
-                        message += "Bar chart selections should be either row selections or cell selections.";
+                        message += "Geo chart selections should be either row selections or cell selections.";
                         message += "  Other visualizations support column selections as well.";
                     }
                 }
@@ -140,21 +127,36 @@ public class BarChartPanel extends Composite {
 //    }
 
     private AbstractDataTable createChartDataTable() {
-        DataTable data = DataTable.create();
 
+        DataTable dataTable = DataTable.create();
 
-            data.addColumn(AbstractDataTable.ColumnType.STRING, chart.getName());
-            data.addColumn(AbstractDataTable.ColumnType.NUMBER, "Count");
-        data.addRows(chart.getChartValues().size());
+//        dataTable.addRows(7);
+//        dataTable.addColumn(AbstractDataTable.ColumnType.STRING, "ADDRESS", "address");
+//        dataTable.setValue(0, 0, "Israel");
+//        dataTable.setValue(1, 0, "United States");
+//        dataTable.setValue(2, 0, "Germany");
+//        dataTable.setValue(3, 0, "Brazil");
+//        dataTable.setValue(4, 0, "Canada");
+//        dataTable.setValue(5, 0, "France");
+//        dataTable.setValue(6, 0, "RU");
 
-        int row = 0;
-        for (ChartValue chartValue : chart.getChartValues())
-        {
-            data.setValue(row, 0, chartValue.getName());
-            data.setValue(row, 1, chartValue.getCount().doubleValue());
-            row++;
-        }
-        return data;
+        dataTable.addColumn(AbstractDataTable.ColumnType.STRING, "City");
+        dataTable.addColumn(AbstractDataTable.ColumnType.NUMBER, "Popularity");
+        dataTable.addRows(6);
+        dataTable.setValue(0, 0, "New York");
+        dataTable.setValue(0, 1, 200);
+        dataTable.setValue(1, 0, "Boston");
+        dataTable.setValue(1, 1, 300);
+        dataTable.setValue(2, 0, "Miami");
+        dataTable.setValue(2, 1, 400);
+        dataTable.setValue(3, 0, "Chicago");
+        dataTable.setValue(3, 1, 500);
+        dataTable.setValue(4, 0, "Los Angeles");
+        dataTable.setValue(4, 1, 600);
+        dataTable.setValue(5, 0, "Houston");
+        dataTable.setValue(5, 1, 700);
+
+        return dataTable;
     }
 
     public void update(Result result)

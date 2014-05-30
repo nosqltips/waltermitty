@@ -206,7 +206,7 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
             public void onFailure(Throwable caught) {
                 caught.printStackTrace();
 
-                centerPanelContainerPanel.update(searchQuery.getResults());
+                centerPanelContainerPanel.update(searchQuery);
                 southPanel.setMessage(caught.getMessage());
                 centerPanelContainerPanel.showPleaseWait(false);
 
@@ -224,7 +224,7 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
             @Override
             public void onSuccess(SearchQuery searchQuery) {
                 // Re-initialize UI - Tables, ???
-                centerPanelContainerPanel.update(searchQuery.getResults());
+                centerPanelContainerPanel.update(searchQuery);
                 southPanel.update(searchQuery);
                 centerPanelContainerPanel.showPleaseWait(false);
             }
@@ -280,7 +280,7 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
         String textToServer = memberId;
         if (textToServer == null || textToServer.isEmpty() || textToServer.equalsIgnoreCase(messages.nameField()))
         {
-            textToServer = "";
+            textToServer = "1";
         }
 
         // Then, we send the input to the server.
@@ -327,7 +327,7 @@ public class MltPanel extends DockLayoutPanel implements ClickHandler, KeyUpHand
                 sliderVerticalPanelPanel.update(searchQuery.getBoosts());
 
                 // Update center panel
-                centerPanelContainerPanel.update(searchQuery.getResults());
+                centerPanelContainerPanel.update(searchQuery);
                 centerPanelContainerPanel.showPleaseWait(false);
 
                 // Update south/bottom panel

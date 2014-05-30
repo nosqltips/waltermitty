@@ -25,8 +25,8 @@ public class WalterMittyClient implements EntryPoint
     public void onModuleLoad() {
         RootLayoutPanel rp = RootLayoutPanel.get();
 
-        searchPanel = new SearchPanel(Style.Unit.EM);
-        rp.add(searchPanel);
+//        searchPanel = new SearchPanel(Style.Unit.EM);
+//        rp.add(searchPanel);
 
         mltPanel = new MltPanel(Style.Unit.EM);
         rp.add(mltPanel);

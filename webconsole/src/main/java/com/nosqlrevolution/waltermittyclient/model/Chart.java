@@ -1,6 +1,5 @@
 package com.nosqlrevolution.waltermittyclient.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nosqlrevolution.waltermittyclient.enums.ChartField;
@@ -19,9 +18,9 @@ public class Chart implements Comparable<Chart>, Serializable {
     private ChartField chartField;
     private ChartType chartType;
     private List<ChartValue> chartValues;
-    
+
     public Chart() { }
-    
+
     @JsonProperty("name")
     public String getName() {
         return name;
@@ -34,40 +33,38 @@ public class Chart implements Comparable<Chart>, Serializable {
     }
 
     @JsonProperty("chartField")
-    @JsonIgnore
-    public ChartField getField() {
+    public ChartField getChartField() {
         return chartField;
     }
 
     @JsonProperty("chartField")
-    @JsonIgnore
-    public Chart setField(ChartField chartField) {
+    public Chart setChartField(ChartField chartField) {
         this.chartField = chartField;
         return this;
     }
 
     @JsonProperty("chartType")
-    public ChartType getType() {
+    public ChartType getChartType() {
         return chartType;
     }
 
     @JsonProperty("chartType")
-    public Chart setType(ChartType chartType) {
+    public Chart setChartType(ChartType chartType) {
         this.chartType = chartType;
         return this;
     }
 
     @JsonProperty("chartValues")
-    public List<ChartValue> getValues() {
+    public List<ChartValue> getChartValues() {
         return chartValues;
     }
 
     @JsonProperty("chartValues")
-    public Chart setValues(List<ChartValue> chartValues) {
+    public Chart setChartValues(List<ChartValue> chartValues) {
         this.chartValues = chartValues;
         return this;
     }
-    
+
     @Override
     public int compareTo(Chart o) {
         return (o.getName().compareTo(name));

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nosqlrevolution.waltermittyclient.enums.ChartField;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  *
@@ -15,7 +14,6 @@ import java.util.List;
 public class ChartRequest implements Serializable {
     private ChartField field;
     private int size = 10;
-    private List<Chart> charts;
     
     public ChartRequest() {}
 
@@ -53,17 +51,6 @@ public class ChartRequest implements Serializable {
     @JsonProperty("size")
     public ChartRequest setSize(int size) {
         this.size = size;
-        return this;
-    }
-
-    @JsonProperty("selectables")
-    public List<Chart> getCharts() {
-        return charts;
-    }
-
-    @JsonProperty("selectables")
-    public ChartRequest setCharts(List<Chart> charts) {
-        this.charts = charts;
         return this;
     }
 
